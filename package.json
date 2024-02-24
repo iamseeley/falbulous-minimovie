@@ -9,8 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.17.0",
     "@fal-ai/serverless-client": "^0.8.5",
     "@fal-ai/serverless-proxy": "^0.7.4",
+    "axios": "^1.6.7",
+    "cloudinary": "^2.0.1",
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18"

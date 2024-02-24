@@ -3,41 +3,36 @@
 import TextInput from '@/components/ui/TextInput';
 import * as fal from '@fal-ai/serverless-client';
 import { useCallback, useMemo, useState } from 'react';
+import Link from 'next/link';
+import axios from 'axios';
 
 fal.config({
   // credentials: 'FAL_KEY_ID:FAL_KEY_SECRET',
   proxyUrl: '/api/fal/proxy',
 });
 
-type ErrorProps = {
-  error: any;
+
+
+interface ScenePlaceholders {
+  [key: string]: string;
+}
+
+const scenePlaceholders: ScenePlaceholders = {
+  Intro: "Introduce your characters and setting.",
+  Development: "Build up the tension in your story.",
+  Climax: "The peak of your story, where everything comes together.",
+  Conclusion: "Wrap up your story, providing closure to your characters and plot."
 };
 
-function Error(props: ErrorProps) {
-  if (!props.error) {
-    return null;
-  }
-  return (
-    <div
-      className="p-4 mb-4 text-sm text-red-800 rounded bg-red-50 dark:bg-gray-800 dark:text-red-400"
-      role="alert"
-    >
-      <span className="font-medium">Error</span> {props.error.message}
-    </div>
-  );
-}
-
-
-
-interface VideoResponse {
-  url: string;
-}
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>('');
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentSceneIndex, setCurrentSceneIndex] = useState<number>(0);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
+  const [scenesInfo, setScenesInfo] = useState<{[key: string]: { url: string; prompt: string }}>({});
+
   const [scenes, setScenes] = useState<string[]>(['Intro', 'Development', 'Climax', 'Conclusion']); // Example scene titles
   const [sceneVideos, setSceneVideos] = useState<{[key: string]: string}>({}); // Object to map scene titles to video URLs
   const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
@@ -49,22 +44,25 @@ export default function Home() {
 
   const moveToNextScene = () => {
     if (currentSceneIndex < scenes.length - 1) {
-      setCurrentSceneIndex(currentSceneIndex + 1);
-      // Reset states for the new scene
-      setPrompt('');
-      setVideoUrl(null); // or keep it if you want to review previous videos
-      // Optionally reset other states as needed
-    } else {
-      alert("You've reached the end of the story!");
+      const nextIndex = currentSceneIndex + 1;
+      setCurrentSceneIndex(nextIndex);
+      const nextSceneTitle = scenes[nextIndex];
+      setCurrentVideoUrl(scenesInfo[nextSceneTitle]?.url || null);
+      setPrompt(scenesInfo[nextSceneTitle]?.prompt || '');
     }
   };
   
   const moveToPreviousScene = () => {
     if (currentSceneIndex > 0) {
-      setCurrentSceneIndex(currentSceneIndex - 1);
-      // Handle state reset or adjustments for moving back
+      const prevIndex = currentSceneIndex - 1;
+      setCurrentSceneIndex(prevIndex);
+      const prevSceneTitle = scenes[prevIndex];
+      setCurrentVideoUrl(scenesInfo[prevSceneTitle]?.url || null);
+      setPrompt(scenesInfo[prevSceneTitle]?.prompt || ''); // Populate the text area with the prompt for the previous scene
     }
   };
+  
+  
   
 
   const generateVideo = async () => {
@@ -75,7 +73,8 @@ export default function Home() {
       const result = await fal.subscribe('fal-ai/fast-animatediff/turbo/text-to-video', {
         input: {
           prompt: prompt,
-          // Add any additional parameters required by the model here
+          video_size: "landscape_16_9",
+          // Additional parameters as required by the model
         },
         pollInterval: 1000,
         logs: true,
@@ -86,23 +85,57 @@ export default function Home() {
             setLogs((update.logs || []).map((log) => log.message));
           }
         },
-      }) as unknown as { video: { url: string } }; // Adjusting based on the sample output
+      }) as unknown as { video: { url: string } };
   
-      const currentScene = scenes[currentSceneIndex]; // Assume currentSceneIndex is managed as part of your state
-      setSceneVideos(prevVideos => ({...prevVideos, [currentScene]: result.video.url}));
+      const currentSceneTitle = scenes[currentSceneIndex];
+      setScenesInfo(prevScenes => ({
+        ...prevScenes,
+        [currentSceneTitle]: { url: result.video.url, prompt: prompt }
+      }));
+      setCurrentVideoUrl(result.video.url);
     } catch (error: any) {
       console.error("Error generating video:", error);
       setError(error);
     } finally {
       setLoading(false);
-      setElapsedTime(Date.now() - start);
     }
   };
   
   
+  const CreateMovieButton: React.FC<{ scenesInfo: {[key: string]: { url: string }} }> = ({ scenesInfo }) => {
+    // Moved inside the component to ensure it updates with scenesInfo
+    const allScenesGenerated = Object.values(scenesInfo).every(scene => scene.url !== "");
+  
+    const handleCreateMovie = async () => {
+      if (!allScenesGenerated) {
+        alert("Please generate all scenes before creating the movie.");
+        return;
+      }
+  
+      const videoUrls = Object.values(scenesInfo).map(scene => scene.url);
+  
+      try {
+        const response = await axios.post('/api/combine-videos', { videoUrls });
+        const combinedVideoUrl = response.data.url;
+        console.log("Combined video URL:", combinedVideoUrl);
+        // Here, you might want to do something with the combined video URL,
+        // like updating the UI to show the video or providing a download link.
+      } catch (error: any) {
+        console.error("Error combining videos:", error.response?.data?.error || error.message);
+      }
+    };
+  
+    return (
+      <button onClick={handleCreateMovie} disabled={!allScenesGenerated} className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60">
+        Create Movie
+      </button>
+    );
+  };
   
 
-  const handlePromptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+
+  const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
   };
 
@@ -111,109 +144,118 @@ export default function Home() {
    
         <div>
           <h2 className="text-4xl font-bold mb-4">
-            <span className='text-purple-600'>Fal</span>balous Storytime
+            <span className='text-purple-600'>Fal</span>balous MiniMovie
           </h2>
-          <h4 className='text-xl font-semibold'>Write your own story scence by scene!</h4>
+          <h4 className='text-xl font-semibold'>Write a story scene by scene and create a mini movie!</h4>
           <div className='flex flex-row gap-2 my-4'>
-            <button className=' py-2 px-4 bg-gray-100 font-bold'>fal.ai</button><button className='font-bold py-2 px-4 bg-gray-100'>source</button>
+            <Link target='_blank' href={"https://fal.ai"} className='hover:bg-gray-300 py-2 px-4 bg-gray-100 font-semibold'>fal.ai</Link><Link target='_blank' href={"https://github.com/iamseeley/falbalous-minimovie"} className='hover:bg-gray-300 font-semibold py-2 px-4 bg-gray-100'>source</Link>
           </div>
         </div>
         
         <section className='flex flex-col gap-8 justify-between'>
         <div>
-        <h4 className='text-xl font-semibold mb-2'>Intro</h4>
+        <h4 className='text-2xl font-semibold mb-4'>{scenes[currentSceneIndex]}</h4>
         <div className="flex flex-col gap-4 items-start w-full  justify-start">
           
           
-          <TextInput value={prompt} onChange={handlePromptChange}  placeholder='Set the scene! Introduce the characters and setting.'  />
+          <TextInput value={prompt} onChange={handlePromptChange}  placeholder={scenePlaceholders[scenes[currentSceneIndex]] || 'Enter your text here'}  />
           <div className='flex flex-row gap-2'>
           <div>
-            <h3>Current Scene: {scenes[currentSceneIndex]}</h3>
-            <div className="flex gap-4">
+            {/* <h3>Current Scene: {scenes[currentSceneIndex]}</h3> */}
+            <div className="flex flex-wrap gap-2">
+              {currentSceneIndex > 0 && (
+                <button
+                  onClick={moveToPreviousScene}
+                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Previous Scene
+                </button>
+              )}
               <button
-                onClick={moveToPreviousScene}
-                disabled={currentSceneIndex === 0}
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              onClick={generateVideo}
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60"
+              disabled={loading}
               >
-                Previous Scene
-              </button>
-              <button
-                onClick={generateVideo}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-                disabled={loading}
-              >
-                {loading ? 'Generating...' : 'Generate Video'}
-              </button>
-              <button
-                onClick={moveToNextScene}
-                disabled={currentSceneIndex === scenes.length - 1}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Next Scene
-              </button>
+              {loading ? 'Generating' : 'Generate Video'}
+              {loading && (
+                <svg className="animate-spin ml-1 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              )}
+            </button>
+
+
+              {currentSceneIndex < scenes.length - 1 && (
+                <button
+                  onClick={moveToNextScene}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Next Scene
+                </button>
+              )}
             </div>
+
           </div>
 
          </div>
-          {/* <button
-            onClick={async (e) => {
-              e.preventDefault();
-              if (audioFile) {
-                try {
-                  await transcribeAudio(audioFile);
-                } catch (e: any) {
-                  setError(e);
-                }
-              }
-            }}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-3 px-6 mx-auto rounded focus:outline-none focus:shadow-outline disabled:opacity-70"
-            disabled={loading || !audioFile}
-          >
-            {loading ? 'Transcribing...' : 'Transcribe'}
-          </button> */}
         </div>
         </div>  
-        <div className=' w-full bg-gray-100 rounded'>
-        {videoUrl ? (
-  <div>
-    <video controls src={videoUrl} className="w-full mt-4">
+        <div className="w-full  rounded">
+  {loading ? (
+    // Shimmer skeleton placeholder
+    <div className="shimmer aspect-video rounded"></div>
+  ) : currentVideoUrl ? (
+    // Video element
+    <video controls src={currentVideoUrl} className="w-full rounded">
       Your browser does not support the video tag.
     </video>
-  </div>
-) : (
-  <p>No video generated yet</p>
-)}
-        </div>
+  ) : (
+    // Message when there's no video and not loading
+    <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
+      <p>No video generated for this scene yet. Generate or navigate through the scenes.</p>
+    </div>
+  )}
+</div>
+
+
+
+
+
         </section>
 
         <section>
-          <h3>All Scenes</h3>
-          {scenes.map((scene, index) => (
-            <div key={index}>
-              <h4>{scene}</h4>
-              {sceneVideos[scene] ? (
-                <video controls src={sceneVideos[scene]} className="w-full mt-4" />
-              ) : (
-                <p>No video generated for this scene yet.</p>
-              )}
-            </div>
-          ))}
+          <h3 className='text-2xl font-semibold mb-2'>All Scenes</h3>
+          <div className='flex flex-col gap-4'>
+            {scenes.map((scene, index) => (
+              <div className='flex flex-col gap-1' key={index}>
+                <h4 className='text-lg font-semibold'>{scene}</h4>
+                {scenesInfo[scene]?.url ? (
+                  <>
+                    <video controls src={scenesInfo[scene].url} className="w-full rounded mb-1" />
+                    <p className="text-sm text-gray-600">Prompt: {scenesInfo[scene].prompt}</p>
+                  </>
+                ) : (
+                  <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
+                    <p>No video generated for this scene yet.</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
+
+
 
 
         <section>
-          <div><h4 className='text-xl font-semibold'>What happens next?</h4></div>
-          
+          <div><h4 className='text-2xl font-semibold mb-2'>Make your movie!</h4></div>
+          <CreateMovieButton scenesInfo={scenesInfo} />
 
 
 
         </section>
 
-
-        <Error error={error} />
-
-        
-    
     </div>
   );
 }
