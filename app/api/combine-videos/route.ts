@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const fetchPromises = videoUrls.map(url => fetchAndTransformVideo(videoUrls));
+    const fetchPromises = videoUrls.map(url => fetchAndTransformVideo(url));
     const results = await Promise.all(fetchPromises);
     return new NextResponse(JSON.stringify({ urls: results }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
@@ -30,36 +30,55 @@ export async function POST(req: NextRequest) {
 }
 
 // Explicitly type the videoUrl parameter
-async function fetchAndTransformVideo(videoUrls: string[]): Promise<string> {
+// async function fetchAndTransformVideo(videoUrls: string[]): Promise<string> {
   
-  const transformations = videoUrls.map((url, index) => {
-    const encodedUrl = encodeURIComponent(url)
-    return {
-      overlay: `video:fetch:${encodedUrl}`,
-      width: 640, // Adjust as needed
-      height: 360, // Adjust as needed
-      crop: 'fill', // Adjust as needed
-      flags: index < videoUrls.length - 1 ? 'layer_apply' : undefined, // Apply transformations except for the last video
-    };
-  });
+//   const transformations = videoUrls.map((url, index) => {
+//     const encodedUrl = encodeURIComponent(url)
+//     return {
+//       overlay: `video:fetch:${encodedUrl}`,
+//       width: 640, // Adjust as needed
+//       height: 360, // Adjust as needed
+//       crop: 'fill', // Adjust as needed
+//       flags: index < videoUrls.length - 1 ? 'layer_apply' : undefined, // Apply transformations except for the last video
+//     };
+//   });
 
+//   try {
+//     const result = await cloudinary.v2.uploader.upload('https://res.cloudinary.com/demo/image/upload/v1566403028/sample.jpg', {
+//       resource_type: 'video',
+//       transformation: [
+//         ...transformations,
+//         { format: 'mp4' }, // Specify the desired output format
+//       ],
+//     });
+
+//     return result.secure_url;
+//   } catch (error) {
+//     console.error("Error concatenating videos:", error);
+//     throw error; // Throw the error to be caught by the calling function
+//   }
+// }
+
+
+async function fetchAndTransformVideo(videoUrl: string): Promise<string> {
   try {
-    const result = await cloudinary.v2.uploader.upload('https://res.cloudinary.com/demo/image/upload/v1566403028/sample.jpg', {
+    // Use the full video URL directly without the 'fetch:' prefix
+    const result = await cloudinary.v2.uploader.upload(videoUrl, {
       resource_type: 'video',
+      // Specify any transformations here
       transformation: [
-        ...transformations,
-        { format: 'mp4' }, // Specify the desired output format
-      ],
+        { width: 640, height: 360, crop: 'fill' },
+        { format: 'mp4' }
+      ]
     });
 
+    console.log('Transformed video URL:', result.secure_url);
     return result.secure_url;
   } catch (error) {
-    console.error("Error concatenating videos:", error);
-    throw error; // Throw the error to be caught by the calling function
+    console.error('Error fetching and transforming video:', error);
+    throw error;
   }
 }
-
-
 
 
 
