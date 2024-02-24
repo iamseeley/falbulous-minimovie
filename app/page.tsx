@@ -93,6 +93,7 @@ export default function Home() {
         [currentSceneTitle]: { url: result.video.url, prompt: prompt }
       }));
       setCurrentVideoUrl(result.video.url);
+      console.log(result.video.url)
     } catch (error: any) {
       console.error("Error generating video:", error);
       setError(error);
@@ -103,7 +104,10 @@ export default function Home() {
   
   
   const CreateMovieButton: React.FC<{ scenesInfo: {[key: string]: { url: string }} }> = ({ scenesInfo }) => {
-    // Moved inside the component to ensure it updates with scenesInfo
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+  
+    // Check if all scenes have generated videos
     const allScenesGenerated = Object.values(scenesInfo).every(scene => scene.url !== "");
   
     const handleCreateMovie = async () => {
@@ -112,25 +116,33 @@ export default function Home() {
         return;
       }
   
+      setIsLoading(true);
+      setError(null);
       const videoUrls = Object.values(scenesInfo).map(scene => scene.url);
   
       try {
         const response = await axios.post('/api/combine-videos', { videoUrls });
         const combinedVideoUrl = response.data.url;
         console.log("Combined video URL:", combinedVideoUrl);
-        // Here, you might want to do something with the combined video URL,
-        // like updating the UI to show the video or providing a download link.
+        // Update your state or UI with the combined video URL here
       } catch (error: any) {
-        console.error("Error combining videos:", error.response?.data?.error || error.message);
+        console.error("Error combining videos:", error);
+        setError("Failed to create movie. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     };
   
     return (
-      <button onClick={handleCreateMovie} disabled={!allScenesGenerated} className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60">
-        Create Movie
-      </button>
+      <>
+        <button onClick={handleCreateMovie} disabled={!allScenesGenerated || isLoading} className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60">
+          {isLoading ? "Creating Movie..." : "Create Movie"}
+        </button>
+        {error && <p className="text-red-500">{error}</p>}
+      </>
     );
   };
+  
   
 
   
@@ -144,7 +156,7 @@ export default function Home() {
    
         <div>
           <h2 className="text-4xl font-bold mb-4">
-            <span className='text-purple-600'>Fal</span>balous MiniMovie
+            <span className='text-purple-600'>Fal</span>bulous MiniMovie
           </h2>
           <h4 className='text-xl font-semibold'>Write a story scene by scene and create a mini movie!</h4>
           <div className='flex flex-row gap-2 my-4'>

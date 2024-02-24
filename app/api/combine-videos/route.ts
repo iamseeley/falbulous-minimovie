@@ -1,64 +1,79 @@
-// First, import necessary modules and configure Cloudinary at the top of your file.
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import cloudinary from 'cloudinary';
+
+// Assuming cloudinary is correctly typed or declarations are extended to match usage
+// If using TypeScript, ensure you have types for cloudinary, or extend them as needed
 
 // Configure Cloudinary with your credentials
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-// API Route Handler
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log(`Received ${req.method} request to /api/combine-videos`); 
-  
-  if (req.method === 'POST') {
-    // Extract video URLs from the request body
-    const { videoUrls } = req.body;
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const videoUrls: string[] = body.videoUrls;
 
-    // Ensure all videos are provided
-    if (!videoUrls || videoUrls.length === 0) {
-      return res.status(400).json({ error: "No video URLs provided." });
-    }
-
-    try {
-      // Combine videos on Cloudinary
-      const combinedVideoUrl = await combineVideosOnCloudinary(videoUrls);
-      // Respond with the URL of the combined video
-      return res.status(200).json({ url: combinedVideoUrl });
-    } catch (error) {
-      console.error("Failed to combine videos:", error);
-      // Handle errors appropriately
-      return res.status(500).json({ error: "Failed to combine videos." });
-    }
-  } else {
-    // Method not allowed
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
-    
+  if (!videoUrls || videoUrls.length === 0) {
+    return new NextResponse(JSON.stringify({ error: "No video URLs provided." }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
-}
-
-async function combineVideosOnCloudinary(videoUrls: string[]): Promise<string> {
-  // Fetch and concatenate videos
-  const transformations = videoUrls.map((url, index) => ({
-    overlay: `remote:${url}`, // Use remote fetch by specifying the URL
-    width: 640,
-    crop: "scale",
-    flags: index === 0 ? undefined : "splice", // Apply 'splice' to concatenate, starting from the second video
-  }));
 
   try {
-    // Initiate the upload and concatenation process
-    const response = await cloudinary.v2.uploader.upload("remote:video_placeholder_or_first_video_url_here", {
-      resource_type: "video",
-      transformation: transformations,
-    });
-    
-    return response.secure_url; // URL of the concatenated video
+    const fetchPromises = videoUrls.map(url => fetchAndTransformVideo(videoUrls));
+    const results = await Promise.all(fetchPromises);
+    return new NextResponse(JSON.stringify({ urls: results }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
-    console.error("Error uploading and concatenating videos:", error);
-    throw error; // Rethrow to handle it in the calling function
+    console.error("Failed to fetch and transform videos:", error);
+    return new NextResponse(JSON.stringify({ error: "Failed to fetch and transform videos." }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 }
+
+// Explicitly type the videoUrl parameter
+async function fetchAndTransformVideo(videoUrls: string[]): Promise<string> {
+  
+  const transformations = videoUrls.map((url, index) => {
+    const encodedUrl = encodeURIComponent(url)
+    return {
+      overlay: `video:fetch:${encodedUrl}`,
+      width: 640, // Adjust as needed
+      height: 360, // Adjust as needed
+      crop: 'fill', // Adjust as needed
+      flags: index < videoUrls.length - 1 ? 'layer_apply' : undefined, // Apply transformations except for the last video
+    };
+  });
+
+  try {
+    const result = await cloudinary.v2.uploader.upload('https://res.cloudinary.com/demo/image/upload/v1566403028/sample.jpg', {
+      resource_type: 'video',
+      transformation: [
+        ...transformations,
+        { format: 'mp4' }, // Specify the desired output format
+      ],
+    });
+
+    return result.secure_url;
+  } catch (error) {
+    console.error("Error concatenating videos:", error);
+    throw error; // Throw the error to be caught by the calling function
+  }
+}
+
+
+
+
+
+
+
+// const result = await cloudinary.v2.uploader.upload(videoUrl, {
+//   resource_type: 'video',
+//   transformation: [{
+//     flags: 'splice',
+//     overlay: 'video:fetch:${encodedUrl}',
+//     width: 640, height: 360, crop: 'fill',
+//     format: 'mp4',
+// }]
+// });
+
+// return result.secure_url;
+// }
