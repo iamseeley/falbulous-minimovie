@@ -195,8 +195,8 @@ export default function Home() {
     <div className="shimmer aspect-video rounded"></div>
   ) : currentVideoUrl ? (
     // Video element
-    <video preload='metadata' controls src={currentVideoUrl} className="w-full rounded">
-      Your browser does not support the video tag.
+    <video preload='metadata' controls src={`${currentVideoUrl}#t=0.001`} className="w-full rounded">
+      Your browser does not support the video tag. 
     </video>
   ) : (
     // Message when there's no video and not loading
@@ -220,7 +220,7 @@ export default function Home() {
                 <h4 className='text-lg font-semibold'>{scene}</h4>
                 {scenesInfo[scene]?.url ? (
                   <>
-                    <video controls src={scenesInfo[scene].url} className="w-full rounded mb-1" />
+                    <video controls src={`${scenesInfo[scene].url}#t=0.001`} className="w-full rounded mb-1" />
                     <p className="text-sm text-gray-600">Prompt: {scenesInfo[scene].prompt}</p>
                   </>
                 ) : (
