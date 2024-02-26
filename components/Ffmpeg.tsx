@@ -56,20 +56,15 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
     const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
   const videoUrl = URL.createObjectURL(videoBlob);
 
-  // Update the video source for playback
+  
   if (videoRef.current) {
     videoRef.current.src = videoUrl;
   }
 
-  // Update the state or variable holding the final video URL
+  
   setFinalVideoUrl(videoUrl);
 }
-    // if (videoRef.current)
-    //   videoRef.current.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }))
-    //  }
-
-    // const videUrl = URL.createObjectURL(videoRef);
-    // setFinalVideoUrl(videUrl)
+    
 
   const allScenesGenerated = Object.keys(scenesInfo).length !== 4 || isLoading;
 
@@ -82,11 +77,14 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
         <div className="shimmer aspect-video rounded"></div>
         ) : !allScenesGenerated ? (
         <>
-        <video preload='metadata' className='mb-4 rounded aspect-video' ref={videoRef} controls></video>
         {finalVideoUrl && (
+          <>
+          <video preload='metadata' className='mb-4 rounded aspect-video'  controls><source src={`${finalVideoUrl}#t=0.001`} /></video>
+        
           <div className='flex justify-center'>
             <a className='py-1 px-4 bg-gray-100  hover:bg-gray-300 rounded-full font-medium' href={finalVideoUrl} download="finalMovie.mp4">Download Movie</a>
           </div>
+          </>
         )}
         </>
         ) : (
