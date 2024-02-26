@@ -2,9 +2,8 @@
 
 import TextInput from '@/components/ui/TextInput';
 import * as fal from '@fal-ai/serverless-client';
-import {  useState, useRef, useEffect } from 'react';
+import {  useState } from 'react';
 import Link from 'next/link';
-
 import Ffmpeg from '@/components/Ffmpeg';
 
 
@@ -35,20 +34,13 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentSceneIndex, setCurrentSceneIndex] = useState<number>(0);
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
+
   const [scenesInfo, setScenesInfo] = useState<{[key: string]: { url: string; prompt: string }}>({});
-
-
   const [scenes, setScenes] = useState<string[]>(['Intro', 'Development', 'Climax', 'Conclusion']); // Example scene titles
-  // const [sceneVideos, setSceneVideos] = useState<{[key: string]: string}>({}); // Object to map scene titles to video URLs
-  // const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
- // Example scenes
-
+ 
   const [error, setError] = useState<any>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
-
-
-
 
 
   const moveToNextScene = () => {
@@ -71,8 +63,7 @@ export default function Home() {
     }
   };
   
-  
-  
+
 
   const generateVideo = async () => {
     setLoading(true);
@@ -113,9 +104,6 @@ export default function Home() {
 
   
 
-  
-
-  
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
@@ -124,7 +112,7 @@ export default function Home() {
   return (
     <div className="px-4 py-10 flex flex-col gap-10">
    
-        <div>
+        <section>
           <h2 className="text-4xl font-bold mb-4">
             <span className='text-purple-600'>Fal</span>bulous MiniMovie
           </h2>
@@ -132,84 +120,77 @@ export default function Home() {
           <div className='flex flex-row gap-2 my-4'>
             <Link target='_blank' href={"https://fal.ai"} className='hover:bg-gray-300 py-2 px-4 bg-gray-100 font-semibold'>fal.ai</Link><Link target='_blank' href={"https://github.com/iamseeley/falbulous-minimovie"} className='hover:bg-gray-300 font-semibold py-2 px-4 bg-gray-100'>source</Link>
           </div>
-        </div>
+        </section>
         
         <section className='flex flex-col gap-8 justify-between'>
+
         <div>
         <h4 className='text-2xl font-semibold mb-4'>{scenes[currentSceneIndex]}</h4>
+
         <div className="flex flex-col gap-4  w-full  ">
-          
-          
           <TextInput value={prompt} onChange={handlePromptChange}  placeholder={scenePlaceholders[scenes[currentSceneIndex]] || 'Enter your text here'}  />
-          <div className='flex flex-row justify-center gap-2'>
-          <div>
+        <div className='flex flex-row justify-center gap-2'>
+
+        <div>
          
-  <div className="flex flex-col items-center justify-center gap-2">
-    <div className='flex flex-wrap justify-center gap-2'>
-  {currentSceneIndex > 0 && (
-    <button
-      onClick={moveToPreviousScene}
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-      disabled={loading || !scenesInfo[scenes[currentSceneIndex - 1]]?.url}
-    >
-      Previous Scene
-    </button>
-  )}
+          <div className="flex flex-col items-center justify-center gap-2">
+            <div className='flex flex-wrap justify-center gap-2'>
+          {currentSceneIndex > 0 && (
+            <button
+              onClick={moveToPreviousScene}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+              disabled={loading || !scenesInfo[scenes[currentSceneIndex - 1]]?.url}
+            >
+              Previous Scene
+            </button>
+          )}
   
-  {currentSceneIndex < scenes.length - 1 && (
-    <button
-      onClick={moveToNextScene}
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-      disabled={loading || !scenesInfo[scenes[currentSceneIndex]]?.url}
-    >
-      Next Scene
-    </button>
-  )}
-  </div>
-  <div>
-  <button
-    onClick={generateVideo}
-    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60"
-    disabled={loading}
-  >
-    {loading ? 'Generating...' : 'Generate Video'}
-    {loading && (
-      <svg className="animate-spin ml-1 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-    )}
-  </button>
-  </div>
-</div>
-
-
-          </div>
-
-         </div>
+            {currentSceneIndex < scenes.length - 1 && (
+              <button
+                onClick={moveToNextScene}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+                disabled={loading || !scenesInfo[scenes[currentSceneIndex]]?.url}
+              >
+                Next Scene
+              </button>
+            )}
         </div>
+        <div>
+              <button
+                onClick={generateVideo}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60"
+                disabled={loading}
+              >
+                {loading ? 'Generating...' : 'Generate Video'}
+                {loading && (
+                  <svg className="animate-spin ml-1 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                )}
+              </button>
+            </div>
+            </div>
+            </div>
+            </div>
+          </div>
         </div>  
         <div className="w-full  rounded">
-  {loading ? (
-   
-    <div className="shimmer aspect-video rounded"></div>
-  ) : currentVideoUrl ? (
-    
-    <video preload='metadata' controls src={`${currentVideoUrl}#t=0.001`} className="w-full rounded">
-      Your browser does not support the video tag. 
-    </video>
-  ) : (
-    
-    <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
-      <p>No video generated for this scene yet. Generate or navigate through the scenes.</p>
-    </div>
-  )}
-</div>
-
-
-
-
-
+          {loading ? (
+          
+            <div className="shimmer aspect-video rounded"></div>
+          ) : currentVideoUrl ? (
+            
+            <video preload='metadata' controls src={`${currentVideoUrl}#t=0.001`} className="w-full rounded">
+              Your browser does not support the video tag. 
+            </video>
+          ) : (
+            
+            <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
+              <p>No video generated for this scene yet. Generate or navigate through the scenes.</p>
+            </div>
+          )}
+        </div>
         </section>
 
         <section>
@@ -237,9 +218,8 @@ export default function Home() {
 
 
         <section>
-          <div><h4 className='text-2xl font-semibold mb-4'>Make your movie!</h4></div>
+            <div><h4 className='text-2xl font-semibold mb-4'>Make your movie!</h4></div>
          
-           
             <Ffmpeg  scenesInfo={scenesInfo} />
         </section>
 
