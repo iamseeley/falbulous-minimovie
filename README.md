@@ -2,6 +2,7 @@
 
 Create mini movies from text using [fal's](https://fal.ai) [AnimateDiff Turbo API](https://fal.ai/models/fast-animatediff-t2v-turbo) and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
 
+*I've been switching back and forth between AnimateDiff and AnimateDiff Turbo*
 
 ## Flow
 1. Input text for each scene.
