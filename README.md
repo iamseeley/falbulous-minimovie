@@ -1,13 +1,14 @@
 # 🎞️  Falbulous MiniMovie
 
-Create mini movies from text using [Fal's](https://fal.ai) [AnimateDiff Turbo API](https://fal.ai/models/fast-animatediff-t2v-turbo) and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
+Create mini movies from text using [fal's](https://fal.ai) [AnimateDiff Turbo API](https://fal.ai/models/fast-animatediff-t2v-turbo) and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
 
 
-## How it works
-1. User inputs text for each scene.
-2. Generate videos for scenes using Fal's API.
+## Flow
+1. Input text for each scene.
+2. Generate videos for scenes using Fal's API (AnimateDiff).
+3. Save the video for each scene.
 3. Concatenate generated scenes into a movie using ffmpeg-wasm.
-4. Download your movie.
+4. Download the movie.
 
 ## Reproduce
 1. Clone this repository.
