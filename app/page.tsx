@@ -4,10 +4,7 @@ import TextInput from '@/components/ui/TextInput';
 import * as fal from '@fal-ai/serverless-client';
 import {  useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import useFFmpeg from '@/components/Ffmpeg';
-import axios from 'axios';
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile, toBlobURL } from '@ffmpeg/util'
+
 import Ffmpeg from '@/components/Ffmpeg';
 
 
@@ -34,21 +31,16 @@ const scenePlaceholders: ScenePlaceholders = {
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>('');
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [currentSceneIndex, setCurrentSceneIndex] = useState<number>(0);
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
   const [scenesInfo, setScenesInfo] = useState<{[key: string]: { url: string; prompt: string }}>({});
 
-  const ffmpegRef = useRef(new FFmpeg())
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-  const messageRef = useRef<HTMLParagraphElement | null>(null)
-  const [loaded, setLoaded] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const [scenes, setScenes] = useState<string[]>(['Intro', 'Development', 'Climax', 'Conclusion']); // Example scene titles
-  const [sceneVideos, setSceneVideos] = useState<{[key: string]: string}>({}); // Object to map scene titles to video URLs
-  const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
+  // const [sceneVideos, setSceneVideos] = useState<{[key: string]: string}>({}); // Object to map scene titles to video URLs
+  // const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
  // Example scenes
 
   const [error, setError] = useState<any>(null);
@@ -120,97 +112,7 @@ export default function Home() {
   };
 
   
- 
-  
-  // const CreateMovieButton: React.FC<{ scenesInfo: { [key: string]: { url: string; prompt: string } } }> = ({ scenesInfo }) => {
-  //   const { ffmpeg, isFFmpegLoaded, loadFFmpeg } = useFFmpeg();
-  //   const [isLoading, setIsLoading] = useState(false);
-  //   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  
-  //   useEffect(() => {
-  //     loadFFmpeg();
-  //   }, [loadFFmpeg]);
-  
-  //   const handleCreateMovie = async () => {
-  //     if (!isFFmpegLoaded) {
-  //       console.log("FFmpeg is not loaded yet.");
-  //       return;
-  //     }
-  
-  //     setIsLoading(true);
-  //     try {
-  //       // Define your concatenation logic here using ffmpeg.FS and ffmpeg.run
-  //       // Example:
-  //       // await ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(scenesInfo[...].url));
-  //       // await ffmpeg.run(...);
-  //       // const output = ffmpeg.FS('readFile', 'output.mp4');
-  //       // const videoBlob = new Blob([output.buffer], { type: 'video/mp4' });
-  //       // setVideoUrl(URL.createObjectURL(videoBlob));
-  
-  //       // After successful concatenation
-  //       console.log("Movie created successfully");
-  //     } catch (error) {
-  //       console.error('Error during video concatenation', error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  
-  //   return (
-  //     <>
-  //       <button onClick={handleCreateMovie} disabled={isLoading || !isFFmpegLoaded}>
-  //         {isLoading ? 'Creating Movie...' : 'Create Movie'}
-  //       </button>
-  //       {videoUrl && <video controls src={videoUrl} style={{ width: '100%' }} />}
-  //     </>
-  //   );
-  // };
-  
- 
 
-  
-  
-  
-  const CreateMovieButton: React.FC<{ scenesInfo: {[key: string]: { url: string }} }> = ({ scenesInfo }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-  
-    // Check if all scenes have generated videos
-    const allScenesGenerated = Object.values(scenesInfo).every(scene => scene.url !== "");
-  
-    const handleCreateMovie = async () => {
-      if (!allScenesGenerated) {
-        alert("Please generate all scenes before creating the movie.");
-        return;
-      }
-  
-      setIsLoading(true);
-      setError(null);
-      const videoUrls = Object.values(scenesInfo).map(scene => scene.url);
-  
-      try {
-        const response = await axios.post('/api/makemovie', { videoUrls });
-        const combinedVideoUrl = response.data.url;
-        console.log("Combined video URL:", combinedVideoUrl);
-        // Update your state or UI with the combined video URL here
-      } catch (error: any) {
-        console.error("Error combining videos:", error);
-        setError("Failed to create movie. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    return (
-      <>
-        <button onClick={handleCreateMovie} disabled={!allScenesGenerated || isLoading} className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60">
-          {isLoading ? "Creating Movie..." : "Create Movie"}
-        </button>
-        {error && <p className="text-red-500">{error}</p>}
-      </>
-    );
-  };
-  
   
 
   
@@ -330,7 +232,7 @@ export default function Home() {
 
         <section>
           <div><h4 className='text-2xl font-semibold mb-2'>Make your movie!</h4></div>
-          <CreateMovieButton scenesInfo={scenesInfo} />
+         
            
             <Ffmpeg scenesInfo={scenesInfo} />
         </section>

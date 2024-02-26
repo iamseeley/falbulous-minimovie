@@ -1,7 +1,7 @@
 'use client'
 
 import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile, toBlobURL } from '@ffmpeg/util'
+import { downloadWithProgress, fetchFile, toBlobURL } from '@ffmpeg/util'
 import { useRef, useState } from 'react'
 
 interface FfmpegProps {
@@ -94,6 +94,7 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
         </span>
       )}
     </button>
+
     </div>
   )
 };
