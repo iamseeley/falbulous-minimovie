@@ -79,11 +79,11 @@ export default function Home() {
     setError(null);
     const start = Date.now();
     try {
-      const result = await fal.subscribe('fal-ai/fast-animatediff/turbo/text-to-video', {
+      const result = await fal.subscribe('fal-ai/fast-animatediff/text-to-video', {
         input: {
           prompt: prompt,
           video_size: "landscape_16_9",
-          // Additional parameters as required by the model
+          
         },
         pollInterval: 1000,
         logs: true,
@@ -191,15 +191,15 @@ export default function Home() {
         </div>  
         <div className="w-full  rounded">
   {loading ? (
-    // Shimmer skeleton placeholder
+   
     <div className="shimmer aspect-video rounded"></div>
   ) : currentVideoUrl ? (
-    // Video element
+    
     <video preload='metadata' controls src={`${currentVideoUrl}#t=0.001`} className="w-full rounded">
       Your browser does not support the video tag. 
     </video>
   ) : (
-    // Message when there's no video and not loading
+    
     <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
       <p>No video generated for this scene yet. Generate or navigate through the scenes.</p>
     </div>

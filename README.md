@@ -5,7 +5,7 @@ Create mini movies from text using [fal's](https://fal.ai) [AnimateDiff Turbo AP
 
 ## Flow
 1. Input text for each scene.
-2. Generate videos for scenes using Fal's API (AnimateDiff).
+2. Generate videos for scenes using fal's API (AnimateDiff).
 3. Save the video for each scene.
 3. Concatenate generated scenes into a movie using ffmpeg-wasm.
 4. Download the movie.
@@ -13,7 +13,7 @@ Create mini movies from text using [fal's](https://fal.ai) [AnimateDiff Turbo AP
 ## Reproduce
 1. Clone this repository.
 2. Install dependencies: `npm install`.
-3. Add Fal's environment variables: 'FAL_KEY'
+3. Add fal's environment variables: 'FAL_KEY'
 3. Run the app: `npm run dev`.
 
 **I had to downgrade ffmpeg to version 0.12.6 for it to work with Next.js / Vercel**
