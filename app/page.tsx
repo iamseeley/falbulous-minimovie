@@ -2,9 +2,16 @@
 
 import TextInput from '@/components/ui/TextInput';
 import * as fal from '@fal-ai/serverless-client';
-import { useCallback, useMemo, useState } from 'react';
+import {  useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import useFFmpeg from '@/components/Ffmpeg';
 import axios from 'axios';
+import { FFmpeg } from '@ffmpeg/ffmpeg'
+import { fetchFile, toBlobURL } from '@ffmpeg/util'
+import Ffmpeg from '@/components/Ffmpeg';
+
+
+
 
 fal.config({
   // credentials: 'FAL_KEY_ID:FAL_KEY_SECRET',
@@ -33,6 +40,12 @@ export default function Home() {
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
   const [scenesInfo, setScenesInfo] = useState<{[key: string]: { url: string; prompt: string }}>({});
 
+  const ffmpegRef = useRef(new FFmpeg())
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const messageRef = useRef<HTMLParagraphElement | null>(null)
+  const [loaded, setLoaded] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
   const [scenes, setScenes] = useState<string[]>(['Intro', 'Development', 'Climax', 'Conclusion']); // Example scene titles
   const [sceneVideos, setSceneVideos] = useState<{[key: string]: string}>({}); // Object to map scene titles to video URLs
   const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
@@ -41,6 +54,10 @@ export default function Home() {
   const [error, setError] = useState<any>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+
+
+
 
   const moveToNextScene = () => {
     if (currentSceneIndex < scenes.length - 1) {
@@ -101,6 +118,57 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  
+ 
+  
+  // const CreateMovieButton: React.FC<{ scenesInfo: { [key: string]: { url: string; prompt: string } } }> = ({ scenesInfo }) => {
+  //   const { ffmpeg, isFFmpegLoaded, loadFFmpeg } = useFFmpeg();
+  //   const [isLoading, setIsLoading] = useState(false);
+  //   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  
+  //   useEffect(() => {
+  //     loadFFmpeg();
+  //   }, [loadFFmpeg]);
+  
+  //   const handleCreateMovie = async () => {
+  //     if (!isFFmpegLoaded) {
+  //       console.log("FFmpeg is not loaded yet.");
+  //       return;
+  //     }
+  
+  //     setIsLoading(true);
+  //     try {
+  //       // Define your concatenation logic here using ffmpeg.FS and ffmpeg.run
+  //       // Example:
+  //       // await ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(scenesInfo[...].url));
+  //       // await ffmpeg.run(...);
+  //       // const output = ffmpeg.FS('readFile', 'output.mp4');
+  //       // const videoBlob = new Blob([output.buffer], { type: 'video/mp4' });
+  //       // setVideoUrl(URL.createObjectURL(videoBlob));
+  
+  //       // After successful concatenation
+  //       console.log("Movie created successfully");
+  //     } catch (error) {
+  //       console.error('Error during video concatenation', error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  
+  //   return (
+  //     <>
+  //       <button onClick={handleCreateMovie} disabled={isLoading || !isFFmpegLoaded}>
+  //         {isLoading ? 'Creating Movie...' : 'Create Movie'}
+  //       </button>
+  //       {videoUrl && <video controls src={videoUrl} style={{ width: '100%' }} />}
+  //     </>
+  //   );
+  // };
+  
+ 
+
+  
   
   
   const CreateMovieButton: React.FC<{ scenesInfo: {[key: string]: { url: string }} }> = ({ scenesInfo }) => {
@@ -121,7 +189,7 @@ export default function Home() {
       const videoUrls = Object.values(scenesInfo).map(scene => scene.url);
   
       try {
-        const response = await axios.post('/api/combine-videos', { videoUrls });
+        const response = await axios.post('/api/makemovie', { videoUrls });
         const combinedVideoUrl = response.data.url;
         console.log("Combined video URL:", combinedVideoUrl);
         // Update your state or UI with the combined video URL here
@@ -263,9 +331,8 @@ export default function Home() {
         <section>
           <div><h4 className='text-2xl font-semibold mb-2'>Make your movie!</h4></div>
           <CreateMovieButton scenesInfo={scenesInfo} />
-
-
-
+           
+            <Ffmpeg scenesInfo={scenesInfo} />
         </section>
 
     </div>

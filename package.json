@@ -10,16 +10,22 @@
   },
   "dependencies": {
     "@cloudinary/react": "^1.13.0",
-    "@cloudinary/url-gen": "^1.17.0",
+    "@cloudinary/url-gen": "^1.18.0",
     "@fal-ai/serverless-client": "^0.8.5",
     "@fal-ai/serverless-proxy": "^0.7.4",
+    "@ffmpeg/core": "^0.12.6",
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
     "axios": "^1.6.7",
     "cloudinary": "^2.0.1",
+    "fluent-ffmpeg": "^2.1.2",
     "next": "14.1.0",
+    "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.24",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
