@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Falbalous MiniMovie",
-  description: "Generate MiniMovies from text, scene by scene.",
+  description: "Generate mini movies from text, scene by scene.",
 };
 
 export default function RootLayout({
