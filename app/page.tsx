@@ -65,43 +65,102 @@ export default function Home() {
   
 
 
+  // const generateVideo = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   const start = Date.now();
+  //   try {
+  //     const result = await fal.subscribe('fal-ai/fast-animatediff/text-to-video', {
+  //       input: {
+  //         prompt: prompt,
+  //         video_size: "landscape_16_9",
+          
+  //       },
+  //       pollInterval: 1000,
+  //       logs: true,
+  //       onQueueUpdate: (update) => {
+  //         console.log("Queue update", update);
+  //         setElapsedTime(Date.now() - start);
+  //         if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
+  //           setLogs((update.logs || []).map((log) => log.message));
+  //         }
+  //       },
+  //     }) as unknown as { video: { url: string } };
+  
+  //     const currentSceneTitle = scenes[currentSceneIndex];
+  //     setScenesInfo(prevScenes => ({
+  //       ...prevScenes,
+  //       [currentSceneTitle]: { url: result.video.url, prompt: prompt }
+  //     }));
+  //     setCurrentVideoUrl(result.video.url);
+  //     console.log(result.video.url)
+  //   } catch (error: any) {
+  //     console.error("Error generating video:", error);
+  //     setError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  
   const generateVideo = async () => {
     setLoading(true);
     setError(null);
     const start = Date.now();
     try {
-      const result = await fal.subscribe('fal-ai/fast-animatediff/text-to-video', {
+      // Step 1: Generate an image from the text
+      const imageResult = await fal.subscribe('fal-ai/fast-turbo-diffusion', {
         input: {
           prompt: prompt,
-          video_size: "landscape_16_9",
-          
+          image_size: "landscape_16_9",
         },
         pollInterval: 1000,
         logs: true,
         onQueueUpdate: (update) => {
-          console.log("Queue update", update);
-          setElapsedTime(Date.now() - start);
-          if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
-            setLogs((update.logs || []).map((log) => log.message));
-          }
+               console.log("Queue update", update);
+                setElapsedTime(Date.now() - start);
+             if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
+                    setLogs((update.logs || []).map((log) => log.message));
+                  }
+                }
+      }) as unknown as { images: Array<{url: string; content_type: string;}>; };
+      
+
+      const imageUrl = imageResult.images[0].url;
+
+  
+      // Step 2: Convert the generated image to a video
+      const videoResult = await fal.subscribe('fal-ai/fast-svd-lcm', {
+        input: {
+          image_url: imageUrl,
+          video_size: "landscape_16_9",
         },
-      }) as unknown as { video: { url: string } };
+        logs: true,
+        pollInterval: 1000,
+        onQueueUpdate: (update) => {
+          console.log("Queue update", update);
+           setElapsedTime(Date.now() - start);
+        if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
+               setLogs((update.logs || []).map((log) => log.message));
+             }
+           }
+      }) as unknown as { video: { url: string } };;
+      
   
       const currentSceneTitle = scenes[currentSceneIndex];
       setScenesInfo(prevScenes => ({
         ...prevScenes,
-        [currentSceneTitle]: { url: result.video.url, prompt: prompt }
+        [currentSceneTitle]: { url: videoResult.video.url, prompt: prompt }
       }));
-      setCurrentVideoUrl(result.video.url);
-      console.log(result.video.url)
-    } catch (error: any) {
+      setCurrentVideoUrl(videoResult.video.url);
+      console.log(videoResult.video.url);
+    } catch (error) {
       console.error("Error generating video:", error);
       setError(error);
     } finally {
       setLoading(false);
     }
   };
-
   
 
 
