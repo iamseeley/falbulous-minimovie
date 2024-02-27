@@ -109,7 +109,7 @@ export default function Home() {
     const start = Date.now();
     try {
       // Step 1: Generate an image from the text
-      const imageResult = await fal.subscribe('fal-ai/fast-turbo-diffusion', {
+      const imageResult = await fal.subscribe('fal-ai/fast-sdxl', {
         input: {
           prompt: prompt,
           image_size: "landscape_16_9",

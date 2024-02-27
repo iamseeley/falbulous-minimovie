@@ -34,7 +34,70 @@ Feel free to contribute by submitting pull requests.
 
 ## Notes
 
-This is my setup using fal's api to generate the mini scenes.
+New setup using sdxl and svd-turbo together.
+
+```TypeScript
+  const generateVideo = async () => {
+    setLoading(true);
+    setError(null);
+    const start = Date.now();
+    try {
+      // Step 1: Generate an image from the text
+      const imageResult = await fal.subscribe('fal-ai/fast-sdxl', {
+        input: {
+          prompt: prompt,
+          image_size: "landscape_16_9",
+        },
+        pollInterval: 1000,
+        logs: true,
+        onQueueUpdate: (update) => {
+               console.log("Queue update", update);
+                setElapsedTime(Date.now() - start);
+             if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
+                    setLogs((update.logs || []).map((log) => log.message));
+                  }
+                }
+      }) as unknown as { images: Array<{url: string; content_type: string;}>; };
+      
+
+      const imageUrl = imageResult.images[0].url;
+
+  
+      // Step 2: Convert the generated image to a video
+      const videoResult = await fal.subscribe('fal-ai/fast-svd-lcm', {
+        input: {
+          image_url: imageUrl,
+          video_size: "landscape_16_9",
+        },
+        logs: true,
+        pollInterval: 1000,
+        onQueueUpdate: (update) => {
+          console.log("Queue update", update);
+           setElapsedTime(Date.now() - start);
+        if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
+               setLogs((update.logs || []).map((log) => log.message));
+             }
+           }
+      }) as unknown as { video: { url: string } };;
+      
+  
+      const currentSceneTitle = scenes[currentSceneIndex];
+      setScenesInfo(prevScenes => ({
+        ...prevScenes,
+        [currentSceneTitle]: { url: videoResult.video.url, prompt: prompt }
+      }));
+      setCurrentVideoUrl(videoResult.video.url);
+      console.log(videoResult.video.url);
+    } catch (error) {
+      console.error("Error generating video:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+```
+
+This is my setup using fal's api to generate the mini scenes. (this was using only one model - animatediff)
 
 ```TypeScript
  const generateVideo = async () => {
