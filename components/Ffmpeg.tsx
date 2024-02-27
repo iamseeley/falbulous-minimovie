@@ -54,12 +54,14 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
     const data = (await ffmpeg.readFile('output.mp4')) as any
 
     const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
-  const videoUrl = URL.createObjectURL(videoBlob);
+    const videoUrl = URL.createObjectURL(videoBlob);
 
   
   if (videoRef.current) {
     videoRef.current.src = videoUrl;
   }
+
+  
 
   
   setFinalVideoUrl(videoUrl);
@@ -77,13 +79,13 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
         <div className="shimmer aspect-video rounded"></div>
         ) : !allScenesGenerated ? (
         <>
-        <video preload='metadata' className='mb-4 rounded aspect-video' src={`${finalVideoUrl}#t=0.001`}  controls>Your browser does not support the video tag. </video>
+        <video preload='metadata' className='mb-4 rounded aspect-video' ref={videoRef} controls>Your browser does not support the video tag. </video>
         {finalVideoUrl && (
-          <>
+          
           <div className='flex justify-center'>
             <a className='py-1 px-4 bg-gray-100  hover:bg-gray-300 rounded-full font-medium' href={finalVideoUrl} download="finalMovie.mp4">Download Movie</a>
           </div>
-          </>
+          
         )}
         </>
         ) : (
