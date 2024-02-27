@@ -79,7 +79,7 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
         <>
         {finalVideoUrl && (
           <>
-          <video preload='metadata' className='mb-4 rounded aspect-video' ref={videoRef}  controls></video>
+          <video preload='metadata' className='mb-4 rounded aspect-video' src={`${finalVideoUrl}#t=0.001`}  controls></video>
         
           <div className='flex justify-center'>
             <a className='py-1 px-4 bg-gray-100  hover:bg-gray-300 rounded-full font-medium' href={finalVideoUrl} download="finalMovie.mp4">Download Movie</a>
