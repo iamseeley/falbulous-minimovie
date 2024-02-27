@@ -20,8 +20,8 @@ Create mini movies from text using [fal's](https://fal.ai) [AnimateDiff Turbo AP
 **I had to downgrade ffmpeg to version 0.12.6 for it to work with Next.js / Vercel**
 
 ## Todo
-- [] Fix thumbnail for final video
-- [] Add audio
+- [ ] Fix thumbnail for final video
+- [ ] Add audio
 
 ## Contributing
 Feel free to contribute by submitting pull requests.
