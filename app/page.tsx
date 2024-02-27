@@ -63,7 +63,7 @@ export default function Home() {
     }
   };
   
-
+// One Model setup - AnimateDiff
 
   // const generateVideo = async () => {
   //   setLoading(true);
@@ -103,16 +103,23 @@ export default function Home() {
   // };
 
   
+
   const generateVideo = async () => {
     setLoading(true);
     setError(null);
     const start = Date.now();
+    // const previousSceneIndex = currentSceneIndex - 1;
+    // const previousScenePrompt = scenesInfo[scenes[previousSceneIndex]]?.prompt || '';
+    // const combinedPrompt = `${previousScenePrompt} ${prompt}`.trim();
+
     try {
+      
       // Step 1: Generate an image from the text
       const imageResult = await fal.subscribe('fal-ai/fast-sdxl', {
         input: {
           prompt: prompt,
           image_size: "landscape_16_9",
+          seed: 1,
         },
         pollInterval: 1000,
         logs: true,
@@ -134,6 +141,8 @@ export default function Home() {
         input: {
           image_url: imageUrl,
           video_size: "landscape_16_9",
+          seed: 1,
+          motion_bucket_id: 127,
         },
         logs: true,
         pollInterval: 1000,
