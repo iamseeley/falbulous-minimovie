@@ -79,7 +79,7 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
         <div className="shimmer aspect-video rounded"></div>
         ) : !allScenesGenerated ? (
         <>
-        <video preload='metadata' className='mb-4 rounded aspect-video' ref={videoRef} controls>Your browser does not support the video tag. </video>
+        <video preload='metadata' className='mb-4 rounded aspect-video' src={`${finalVideoUrl}#t=0.001`} controls>Your browser does not support the video tag. </video>
         {finalVideoUrl && (
           
           <div className='flex justify-center'>
