@@ -6,7 +6,7 @@ Create mini movies from text using [fal's](https://fal.ai) open source ml model 
 
 > I initially was switching back and forth between AnimateDiff and AnimateDiff Turbo
 
-## Flow
+## Use
 1. Input text for each scene.
 2. Generate videos for scenes using fal's API (AnimateDiff).
 3. Save the video for each scene.
