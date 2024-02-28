@@ -11,8 +11,6 @@ import SceneEditor from '@/components/ui/SceneEditor';
 import SceneList from '@/components/SceneList';
 
 
-
-
 fal.config({
   // credentials: 'FAL_KEY_ID:FAL_KEY_SECRET',
   proxyUrl: '/api/fal/proxy',
@@ -109,7 +107,6 @@ export default function Home() {
   // };
 
 
-  
   const handleMotionChange = (motionValue: number): void => {
     setMotionBucketId(motionValue); // Directly set the motion value
     setTriggerVideoGeneration(true); // Indicate that this change should trigger video generation
@@ -122,7 +119,6 @@ export default function Home() {
     }
   }, [motionBucketId, triggerVideoGeneration]); 
   
-
 
   const generateVideo = async () => {
     setLoading(true);
@@ -207,7 +203,7 @@ export default function Home() {
         <section className='flex flex-col gap-8 justify-between'>
           <SceneEditor 
           prompt={prompt}
-          handlePromptChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value)}
+          handlePromptChange={handlePromptChange}
           generateVideo={generateVideo}
           loading={loading}
           placeholder={scenePlaceholders[scenes[currentSceneIndex]] || 'Enter your text here'}
