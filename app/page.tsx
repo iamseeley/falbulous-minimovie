@@ -56,7 +56,7 @@ export default function Home() {
       setPrompt(scenesInfo[nextSceneTitle]?.prompt || '');
     }
   };
-  
+
   const moveToPreviousScene = () => {
     if (currentSceneIndex > 0) {
       const prevIndex = currentSceneIndex - 1;
@@ -66,7 +66,7 @@ export default function Home() {
       setPrompt(scenesInfo[prevSceneTitle]?.prompt || ''); // Populate the text area with the prompt for the previous scene
     }
   };
-  
+
 // One Model setup - AnimateDiff
 
   // const generateVideo = async () => {
@@ -78,7 +78,7 @@ export default function Home() {
   //       input: {
   //         prompt: prompt,
   //         video_size: "landscape_16_9",
-          
+
   //       },
   //       pollInterval: 1000,
   //       logs: true,
@@ -90,7 +90,7 @@ export default function Home() {
   //         }
   //       },
   //     }) as unknown as { video: { url: string } };
-  
+
   //     const currentSceneTitle = scenes[currentSceneIndex];
   //     setScenesInfo(prevScenes => ({
   //       ...prevScenes,
@@ -111,14 +111,14 @@ export default function Home() {
     setMotionBucketId(motionValue); // Directly set the motion value
     setTriggerVideoGeneration(true); // Indicate that this change should trigger video generation
   };
-  
+
   useEffect(() => {
     if (triggerVideoGeneration) {
       generateVideo();
       setTriggerVideoGeneration(false); // Reset the flag after generating the video
     }
-  }, [motionBucketId, triggerVideoGeneration]); 
-  
+  }, [motionBucketId, triggerVideoGeneration]);
+
 
   const generateVideo = async () => {
     setLoading(true);
@@ -129,7 +129,7 @@ export default function Home() {
     // const combinedPrompt = `${previousScenePrompt} ${prompt}`.trim();
 
     try {
-      
+
       // Step 1: Generate an image from the text
       const imageResult = await fal.subscribe('fal-ai/fast-sdxl', {
         input: {
@@ -147,11 +147,11 @@ export default function Home() {
                   }
                 }
       }) as unknown as { images: Array<{url: string; content_type: string;}>; };
-      
+
 
       const imageUrl = imageResult.images[0].url;
 
-  
+
       // Step 2: Convert the generated image to a video
       const videoResult = await fal.subscribe('fal-ai/fast-svd-lcm', {
         input: {
@@ -171,7 +171,7 @@ export default function Home() {
            }
       }) as unknown as { video: { url: string } };;
       console.log(motionBucketId)
-  
+
       const currentSceneTitle = scenes[currentSceneIndex];
       setScenesInfo(prevScenes => ({
         ...prevScenes,
@@ -186,7 +186,7 @@ export default function Home() {
       setLoading(false);
     }
   };
-  
+
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
@@ -194,13 +194,13 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-10">
-   
+
         <section>
           <Hero />
         </section>
-        
+
         <section>
-          <SceneEditor 
+        <SceneEditor
           prompt={prompt}
           handlePromptChange={handlePromptChange}
           generateVideo={generateVideo}
@@ -208,12 +208,14 @@ export default function Home() {
           placeholder={scenePlaceholders[scenes[currentSceneIndex]] || 'Enter your text here'}
           moveToPreviousScene={moveToPreviousScene}
           moveToNextScene={moveToNextScene}
-          handleMotionChange={handleMotionChange}
+          setMotionBucketId={setMotionBucketId} // Use only this for clarity
+          motionValue={motionBucketId}
           currentSceneIndex={currentSceneIndex}
+          setCurrentSceneIndex={setCurrentSceneIndex}
           scenes={scenes}
           scenesInfo={scenesInfo}
           currentVideoUrl={currentVideoUrl}
-          />
+        />
         </section>
 
         <section>
