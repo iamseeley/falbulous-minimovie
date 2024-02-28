@@ -188,7 +188,6 @@ export default function Home() {
   };
   
 
-
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
   };
@@ -200,7 +199,7 @@ export default function Home() {
           <Hero />
         </section>
         
-        <section className='flex flex-col gap-8 justify-between'>
+        <section>
           <SceneEditor 
           prompt={prompt}
           handlePromptChange={handlePromptChange}
