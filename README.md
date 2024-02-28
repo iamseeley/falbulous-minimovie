@@ -2,9 +2,9 @@
 
 Create mini movies from text using [fal](https://fal.ai) and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
 
-*I've been switching back and forth between AnimateDiff and AnimateDiff Turbo* 
+*I am now using SDXL for text-image and then SVD-Turbo for image-vide.* 
 
-> I am now using SDXL for text-image and then SVD-Turbo for image-vide.
+> I initially was switching back and forth between AnimateDiff and AnimateDiff Turbo
 
 ## Flow
 1. Input text for each scene.
