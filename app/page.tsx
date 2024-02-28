@@ -203,15 +203,18 @@ export default function Home() {
           <div className='flex flex-row gap-2 my-4'>
             <Link target='_blank' href={"https://fal.ai"} className='hover:bg-gray-300 py-2 px-4 bg-gray-100 font-semibold'>fal.ai</Link><Link target='_blank' href={"https://github.com/iamseeley/falbulous-minimovie"} className='hover:bg-gray-300 font-semibold py-2 px-4 bg-gray-100'>source</Link>
           </div>
+          
         </section>
         
         <section className='flex flex-col gap-8 justify-between'>
 
         <div>
-        <h4 className='text-2xl font-semibold mb-4'>{scenes[currentSceneIndex]}</h4>
-
+        <h4 className='text-2xl font-semibold mb-2'>{scenes[currentSceneIndex]}</h4>
+        <div><p className='font-medium text-sm mb-2'>💡 The more descriptive the prompt the better!</p></div>
         <div className="flex flex-col gap-4  w-full  ">
           <TextInput value={prompt} onChange={handlePromptChange}  placeholder={scenePlaceholders[scenes[currentSceneIndex]] || 'Enter your text here'}  />
+          
+        
         <div className='flex flex-row justify-center gap-2'>
 
         <div>
