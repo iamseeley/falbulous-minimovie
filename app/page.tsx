@@ -253,11 +253,11 @@ export default function Home() {
                   </svg>
                 )}
               </button>
-              <div className='flex flex-row gap-2'>
-                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(30)} disabled={loading}>Very Low Motion</button>
-                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(60)} disabled={loading}>Low Motion</button>
-                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(95)} disabled={loading}>Medium Motion</button>
+              <div className='flex flex-col gap-2 md:flex-row'>
                 <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(127)} disabled={loading}>Default Motion</button>
+                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(95)} disabled={loading}>Medium Motion</button>
+                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(60)} disabled={loading}>Low Motion</button>
+                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(30)} disabled={loading}>Very Low Motion</button>
               </div>
 
             </div>
