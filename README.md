@@ -1,6 +1,6 @@
 # 🎞️  Falbulous MiniMovie
 
-Create mini movies from text using [fal's](https://fal.ai) apis and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
+Create mini movies from text using [fal's](https://fal.ai) open source ml model apis and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
 
 *I am now using SDXL for text-image and then SVD-Turbo for image-video.* 
 
