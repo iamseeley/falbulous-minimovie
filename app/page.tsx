@@ -45,6 +45,10 @@ export default function Home() {
   const [error, setError] = useState<any>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [condAug, setCondAug] = useState<number>(0.2);
+  const [steps, setSteps] = useState<number>(4);
+  const [fps, setFps] = useState<number>(10);
+  const [seed, setSeed] = useState<number | string>('random');
 
 
   const moveToNextScene = () => {
@@ -157,8 +161,11 @@ export default function Home() {
         input: {
           image_url: imageUrl,
           video_size: "landscape_16_9",
-          seed: 1,
+          // seed: seed,
           motion_bucket_id: motionBucketId,
+          cond_aug: condAug,
+          setps: steps,
+          fps: fps,
         },
         logs: true,
         pollInterval: 1000,
@@ -210,6 +217,14 @@ export default function Home() {
           moveToNextScene={moveToNextScene}
           setMotionBucketId={setMotionBucketId} // Use only this for clarity
           motionValue={motionBucketId}
+          condAug={condAug}
+          setCondAug={setCondAug}
+          steps={steps}
+          setSteps={setSteps}
+          fps={fps}
+          setFps={setFps}
+          seed={seed}
+          setSeed={setSeed}
           currentSceneIndex={currentSceneIndex}
           setCurrentSceneIndex={setCurrentSceneIndex}
           scenes={scenes}
