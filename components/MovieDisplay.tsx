@@ -5,11 +5,11 @@ import { downloadWithProgress, fetchFile, toBlobURL } from '@ffmpeg/util'
 import { stringify } from 'querystring';
 import { useRef, useState } from 'react'
 
-interface FfmpegProps {
+interface MovieDisplayProps {
   scenesInfo: { [key: string]: { url: string; prompt: string } };
 }
 
-const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
+const MovieDisplay: React.FC<MovieDisplayProps> = ({ scenesInfo }) => {
   const [loaded, setLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const ffmpegRef = useRef(new FFmpeg())
@@ -120,4 +120,4 @@ const Ffmpeg: React.FC<FfmpegProps> = ({ scenesInfo }) => {
   )
 };
 
-export default Ffmpeg;
+export default MovieDisplay;

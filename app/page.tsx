@@ -4,7 +4,11 @@ import TextInput from '@/components/ui/TextInput';
 import * as fal from '@fal-ai/serverless-client';
 import {  useState, useEffect } from 'react';
 import Link from 'next/link';
-import Ffmpeg from '@/components/Ffmpeg';
+import Ffmpeg from '@/components/MovieDisplay';
+import MovieDisplay from '@/components/MovieDisplay';
+import Hero from '@/components/Hero';
+import SceneEditor from '@/components/ui/SceneEditor';
+import SceneList from '@/components/SceneList';
 
 
 
@@ -14,7 +18,10 @@ fal.config({
   proxyUrl: '/api/fal/proxy',
 });
 
-
+interface SceneInfo {
+  url: string;
+  prompt: string;
+}
 
 interface ScenePlaceholders {
   [key: string]: string;
@@ -30,14 +37,13 @@ const scenePlaceholders: ScenePlaceholders = {
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>('');
-
   const [loading, setLoading] = useState<boolean>(false);
   const [currentSceneIndex, setCurrentSceneIndex] = useState<number>(0);
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
-
-  const [scenesInfo, setScenesInfo] = useState<{[key: string]: { url: string; prompt: string }}>({});
-  const [scenes, setScenes] = useState<string[]>(['Intro', 'Development', 'Climax', 'Conclusion']); // Example scene titles
- 
+  const [scenesInfo, setScenesInfo] = useState<{ [key: string]: SceneInfo }>({});
+  const scenes = ['Intro', 'Development', 'Climax', 'Conclusion'];
+  const [motionBucketId, setMotionBucketId] = useState<number>(127);
+  const [triggerVideoGeneration, setTriggerVideoGeneration] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
@@ -102,8 +108,7 @@ export default function Home() {
   //   }
   // };
 
-  const [motionBucketId, setMotionBucketId] = useState<number>(127);
-  const [triggerVideoGeneration, setTriggerVideoGeneration] = useState<boolean>(false);
+
   
   const handleMotionChange = (motionValue: number): void => {
     setMotionBucketId(motionValue); // Directly set the motion value
@@ -193,128 +198,36 @@ export default function Home() {
   };
 
   return (
-    <div className="px-4 py-10 flex flex-col gap-10">
+    <div className="flex flex-col gap-10">
    
         <section>
-          <h2 className="text-4xl font-bold mb-4">
-            <span className='text-purple-600'>Fal</span>bulous MiniMovie
-          </h2>
-          <h4 className='text-xl font-semibold'>Write a story scene by scene to create a mini movie!</h4>
-          <div className='flex flex-row gap-2 my-4'>
-            <Link target='_blank' href={"https://fal.ai"} className='hover:bg-gray-300 py-2 px-4 bg-gray-100 font-semibold'>fal.ai</Link><Link target='_blank' href={"https://github.com/iamseeley/falbulous-minimovie"} className='hover:bg-gray-300 font-semibold py-2 px-4 bg-gray-100'>source</Link>
-          </div>
-          
+          <Hero />
         </section>
         
         <section className='flex flex-col gap-8 justify-between'>
-
-        <div>
-        <h4 className='text-2xl font-semibold mb-2'>{scenes[currentSceneIndex]}</h4>
-        <div><p className='font-medium text-sm mb-2'>💡 The more descriptive the prompt the better!</p></div>
-        <div className="flex flex-col gap-4  w-full  ">
-          <TextInput value={prompt} onChange={handlePromptChange}  placeholder={scenePlaceholders[scenes[currentSceneIndex]] || 'Enter your text here'}  />
-          
-        
-        <div className='flex flex-row justify-center gap-2'>
-
-        <div>
-         
-          <div className="flex flex-col items-center justify-center gap-2">
-            <div className='flex flex-wrap justify-center gap-2'>
-          {currentSceneIndex > 0 && (
-            <button
-              onClick={moveToPreviousScene}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-              disabled={loading || !scenesInfo[scenes[currentSceneIndex - 1]]?.url}
-            >
-              Previous Scene
-            </button>
-          )}
-  
-            {currentSceneIndex < scenes.length - 1 && (
-              <button
-                onClick={moveToNextScene}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-                disabled={loading || !scenesInfo[scenes[currentSceneIndex]]?.url}
-              >
-                Next Scene
-              </button>
-            )}
-        </div>
-        <div className='flex flex-col justify-center items-center gap-4'>
-          
-              <button
-                onClick={generateVideo}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60"
-                disabled={loading}
-              >
-                {loading ? 'Generating...' : 'Generate Video'}
-                {loading && (
-                  <svg className="animate-spin ml-1 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                )}
-              </button>
-              <div className='flex flex-col gap-2 md:flex-row'>
-                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(127)} disabled={loading}>Default Motion</button>
-                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(95)} disabled={loading}>Medium Motion</button>
-                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(60)} disabled={loading}>Low Motion</button>
-                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(30)} disabled={loading}>Very Low Motion</button>
-              </div>
-
-            </div>
-            </div>
-            </div>
-            </div>
-          </div>
-        </div>  
-        <div className="w-full  rounded">
-          {loading ? (
-          
-            <div className="shimmer aspect-video rounded"></div>
-          ) : currentVideoUrl ? (
-            
-            <video preload='metadata' controls src={`${currentVideoUrl}#t=0.001`} className="w-full rounded">
-              Your browser does not support the video tag. 
-            </video>
-          ) : (
-            
-            <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
-              <p>No video generated for this scene yet. Generate or navigate through the scenes.</p>
-            </div>
-          )}
-        </div>
+          <SceneEditor 
+          prompt={prompt}
+          handlePromptChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value)}
+          generateVideo={generateVideo}
+          loading={loading}
+          placeholder={scenePlaceholders[scenes[currentSceneIndex]] || 'Enter your text here'}
+          moveToPreviousScene={moveToPreviousScene}
+          moveToNextScene={moveToNextScene}
+          handleMotionChange={handleMotionChange}
+          currentSceneIndex={currentSceneIndex}
+          scenes={scenes}
+          scenesInfo={scenesInfo}
+          currentVideoUrl={currentVideoUrl}
+          />
         </section>
 
         <section>
-          <h3 className='text-2xl font-semibold mb-2'>All Scenes</h3>
-          <div className='flex flex-col gap-4'>
-            {scenes.map((scene, index) => (
-              <div className='flex flex-col gap-1' key={index}>
-                <h4 className='text-lg font-semibold'>{scene}</h4>
-                {scenesInfo[scene]?.url ? (
-                  <>
-                    <video controls src={`${scenesInfo[scene].url}#t=0.001`} className="w-full rounded mb-1" />
-                    <p className="text-sm text-gray-600">Prompt: {scenesInfo[scene].prompt}</p>
-                  </>
-                ) : (
-                  <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
-                    <p>No video generated for this scene yet.</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <SceneList scenes={scenes} scenesInfo={scenesInfo} />
         </section>
-
-
-
 
         <section>
             <div><h4 className='text-2xl font-semibold mb-4'>Make your movie!</h4></div>
-         
-            <Ffmpeg  scenesInfo={scenesInfo} />
+            <MovieDisplay  scenesInfo={scenesInfo} />
         </section>
 
     </div>

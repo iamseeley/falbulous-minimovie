@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface TextInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void; // Updated to HTMLTextAreaElement
