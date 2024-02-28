@@ -8,7 +8,7 @@ Create mini movies from text using [fal's](https://fal.ai) open source ml model 
 
 ## Use
 1. Input text for each scene.
-2. Generate videos for scenes using fal's API (AnimateDiff).
+2. Generate videos for scenes using fal's API.
 3. Save the video for each scene.
 3. Concatenate generated scenes into a movie using ffmpeg-wasm.
 4. Download the movie.
