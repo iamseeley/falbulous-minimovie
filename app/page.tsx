@@ -2,7 +2,7 @@
 
 import TextInput from '@/components/ui/TextInput';
 import * as fal from '@fal-ai/serverless-client';
-import {  useState } from 'react';
+import {  useState, useEffect } from 'react';
 import Link from 'next/link';
 import Ffmpeg from '@/components/Ffmpeg';
 
@@ -102,7 +102,22 @@ export default function Home() {
   //   }
   // };
 
+  const [motionBucketId, setMotionBucketId] = useState<number>(127);
+  const [triggerVideoGeneration, setTriggerVideoGeneration] = useState<boolean>(false);
   
+  const handleMotionChange = (motionValue: number): void => {
+    setMotionBucketId(motionValue); // Directly set the motion value
+    setTriggerVideoGeneration(true); // Indicate that this change should trigger video generation
+  };
+  
+  useEffect(() => {
+    if (triggerVideoGeneration) {
+      generateVideo();
+      setTriggerVideoGeneration(false); // Reset the flag after generating the video
+    }
+  }, [motionBucketId, triggerVideoGeneration]); 
+  
+
 
   const generateVideo = async () => {
     setLoading(true);
@@ -142,7 +157,7 @@ export default function Home() {
           image_url: imageUrl,
           video_size: "landscape_16_9",
           seed: 1,
-          motion_bucket_id: 127,
+          motion_bucket_id: motionBucketId,
         },
         logs: true,
         pollInterval: 1000,
@@ -154,7 +169,7 @@ export default function Home() {
              }
            }
       }) as unknown as { video: { url: string } };;
-      
+      console.log(motionBucketId)
   
       const currentSceneTitle = scenes[currentSceneIndex];
       setScenesInfo(prevScenes => ({
@@ -223,7 +238,8 @@ export default function Home() {
               </button>
             )}
         </div>
-        <div>
+        <div className='flex flex-col justify-center items-center gap-4'>
+          
               <button
                 onClick={generateVideo}
                 className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60"
@@ -237,6 +253,13 @@ export default function Home() {
                   </svg>
                 )}
               </button>
+              <div className='flex flex-row gap-2'>
+                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(30)} disabled={loading}>Very Low Motion</button>
+                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(60)} disabled={loading}>Low Motion</button>
+                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(95)} disabled={loading}>Medium Motion</button>
+                <button className='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60' onClick={() => handleMotionChange(127)} disabled={loading}>Default Motion</button>
+              </div>
+
             </div>
             </div>
             </div>
