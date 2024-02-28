@@ -1,8 +1,10 @@
 # 🎞️  Falbulous MiniMovie
 
-Create mini movies from text using [fal's](https://fal.ai) [AnimateDiff Turbo API](https://fal.ai/models/fast-animatediff-t2v-turbo) and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
+Create mini movies from text using [fal's](https://fal.ai) open source ml model apis and [ffmpeg-wasm](https://ffmpegwasm.netlify.app/) for video concatenation.
 
-*I've been switching back and forth between AnimateDiff and AnimateDiff Turbo*
+*I am now using SDXL for text-image and then SVD-Turbo for image-video.* 
+
+> I initially was switching back and forth between AnimateDiff and AnimateDiff Turbo
 
 ## Flow
 1. Input text for each scene.
@@ -20,6 +22,7 @@ Create mini movies from text using [fal's](https://fal.ai) [AnimateDiff Turbo AP
 **I had to downgrade ffmpeg to version 0.12.6 for it to work with Next.js / Vercel**
 
 ## Todo
+- [ ] Improve video generation nav
 - [ ] Fix thumbnail for final video
 - [ ] Add audio
 
