@@ -22,6 +22,7 @@ Create mini movies from text using [fal](https://fal.ai) and [ffmpeg-wasm](https
 **I had to downgrade ffmpeg to version 0.12.6 for it to work with Next.js / Vercel**
 
 ## Todo
+- [ ] Improve video generation nav
 - [ ] Fix thumbnail for final video
 - [ ] Add audio
 
