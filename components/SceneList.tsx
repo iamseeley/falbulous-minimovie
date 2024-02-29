@@ -6,7 +6,7 @@ interface SceneListProps {
 const SceneList: React.FC<SceneListProps> = ({ scenes, scenesInfo }) => {
   return (
     <section>
-      <h3 className='text-2xl font-semibold mb-2'>All Scenes</h3>
+      <h3 className='text-2xl font-semibold mb-2'>Scenes</h3>
       <div className='flex flex-col gap-4'>
         {scenes.map((scene, index) => (
           <div className='flex flex-col gap-1' key={index}>
