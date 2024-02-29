@@ -1,0 +1,4 @@
+fal
+vllm
+torch==2.0.1
+pydantic
