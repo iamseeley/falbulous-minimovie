@@ -56,6 +56,7 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
   // Assuming `motionValue` is managed within MotionControls or at a higher level to be used here
   return (
     <div className="flex flex-col gap-4">
+      <h3 className='text-2xl font-semibold'>Scene Editor</h3>
       <TitleNavigation
         setCurrentSceneIndex={setCurrentSceneIndex}
         currentSceneIndex={currentSceneIndex}
@@ -65,7 +66,7 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
         moveToPreviousScene={moveToPreviousScene}
         moveToNextScene={moveToNextScene}
       />
-      <p className='font-medium text-sm'>📌 The more descriptive the prompt the better!</p>
+      <p className='font-medium text-sm'>📌 The more descriptive the better!</p>
       <TextInput 
         value={prompt} 
         onChange={handlePromptChange} 
