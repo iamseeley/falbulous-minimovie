@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Header />
-          <main className="min-h-screen mx-auto max-w-4xl mb-10 px-4 py-10 flex flex-col gap-10">
+          <main className="min-h-screen mx-auto max-w-4xl mb-10 px-4 py-10 md:py-20">
             {children}
           </main>
         <Footer />
