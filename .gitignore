@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+/chat_service/venv
 
 # testing
 /coverage
