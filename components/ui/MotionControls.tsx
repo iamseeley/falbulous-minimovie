@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import HoverCard from './HoverCard';
 
 interface MotionControlsProps {
   motionValue: number;
@@ -34,13 +35,14 @@ const MotionControls: React.FC<MotionControlsProps> = ({
   const handleSeedChange = (e: React.ChangeEvent<HTMLInputElement>) => setSeed(e.target.value);
 
   return (
-    <div className='flex flex-col  gap-2'>
-      <div className='text-center font-semibold'>Motion Controls</div>
+    <div className='flex flex-col  gap-4 mt-2'>
+      {/* <div className='text-center font-semibold'>Controls</div> */}
       {/* Motion Bucket */}
       <div className='flex flex-col gap-2'>
-      <label className="">
-        Motion Value:
-      </label>
+      <div className='flex flex-row justify-between items-center'>
+      <label className="font-medium">motion bucket</label>
+      <HoverCard content={<p>The motion bucket value determines the motion of the generated video. The higher the number, the more motion there will be.</p>} trigger={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>} />
+      </div>
       <div className='flex flex-row gap-2'>
       <input
         type="range"
@@ -58,19 +60,23 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={motionValue}
           onChange={handleChange}
           disabled={loading}
-          className="w-20 p-1 border rounded"
+          className="w-20 px-2 py-1 border rounded focus:outline-purple-500 focus:outline"
         />
       </div>
       </div>
       
 
       <div className="flex flex-col gap-2">
-        <label className="flex-1">Cond Aug:</label>
+      <div className='flex flex-row justify-between items-center'>
+      <label className="font-medium">cond aug</label>
+      <HoverCard content={<p>Increasing the conditioning augmentation value leads to more varied and potentially unexpected results.</p>} trigger={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>} />
+      </div>
         <div className='flex flex-row gap-2'>
         <input
           type="range"
           min="0"
           max="10"
+          step=".1"
           value={condAug}
           onChange={handleCondAugChange}
           disabled={loading}
@@ -83,14 +89,17 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={condAug}
           onChange={handleCondAugChange}
           disabled={loading}
-          className="w-20 p-1 border rounded"
+          className="w-20 px-2 py-1 border rounded focus:outline-purple-500 focus:outline"
         />
         </div>
       </div>
 
       {/* Steps */}
       <div className="flex flex-col gap-2">
-        <label className="flex-1">Steps:</label>
+      <div className='flex flex-row justify-between items-center'>
+      <label className="font-medium">steps</label>
+      <HoverCard content={<p>The higher the value, the better the quality of the video, but it will take longer to generate.</p>} trigger={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>} />
+      </div>
         <div className='flex flex-row gap-2'>
         <input
           type="range"
@@ -108,14 +117,17 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={steps}
           onChange={handleStepsChange}
           disabled={loading}
-          className="w-20 p-1 border rounded"
+          className="w-20 px-2 py-1 border rounded focus:outline-purple-500 focus:outline"
         />
         </div>
       </div>
 
       {/* FPS */}
       <div className="flex flex-col gap-2">
-        <label className="flex-1">FPS:</label>
+      <div className='flex flex-row justify-between items-center'>
+      <label className="font-medium">frames per second</label>
+      <HoverCard content={<p>The higher the value, the faster the video will play. </p>} trigger={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="cursor-pointer"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>} />
+      </div>
         <div className='flex flex-row gap-2'>
         <input
           type="range"
@@ -133,7 +145,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={fps}
           onChange={handleFpsChange}
           disabled={loading}
-          className="w-20 p-1 border rounded"
+          className="w-20 px-2 py-1 border rounded focus:outline-purple-500 focus:outline"
         />
         </div>
       </div>

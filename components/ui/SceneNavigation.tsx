@@ -24,7 +24,7 @@ interface SceneNavigationProps {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
           disabled={loading || !scenesInfo[scenes[currentSceneIndex - 1]]?.url}
         >
-          Previous Scene
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
       )}
       {currentSceneIndex < scenes.length - 1 && (
@@ -33,7 +33,7 @@ interface SceneNavigationProps {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
           disabled={loading || !scenesInfo[scenes[currentSceneIndex]]?.url}
         >
-          Next Scene
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </button>
       )}
     </div>
