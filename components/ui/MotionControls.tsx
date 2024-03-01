@@ -45,6 +45,19 @@ const MotionControls: React.FC<MotionControlsProps> = ({
     setValue(newValue);
   };
 
+  const incrementCond = (value: number, setValue: (value: number) => void, max: number) => {
+    let newValue = value + 0.1;
+    newValue = Math.min(newValue, max);
+    setValue(parseFloat(newValue.toFixed(1)));
+  };
+  
+  const decrementCond = (value: number, setValue: (value: number) => void, min: number) => {
+    let newValue = value - 0.1;
+    newValue = Math.max(newValue, min);
+    setValue(parseFloat(newValue.toFixed(1)));
+  };
+  
+
   return (
     <div className='flex flex-col  gap-6 mt-4 md:mt-0 leading-none'>
       {/* <div className='text-center font-semibold'>Controls</div> */}
@@ -64,6 +77,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
         onChange={handleChange}
         disabled={loading}
       />
+     <div className="flex flex-row">
      <input
           type="number"
           min="1"
@@ -71,12 +85,29 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={motionValue}
           onChange={handleChange}
           disabled={loading}
-          className="w-20 px-2 py-1 border rounded focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border rounded-l focus:outline-purple-500 focus:outline"
         />
+        <div className='flex flex-col'>
+            <button
+              className=" px-1 border-r border-t border-b rounded-tr bg-gray-100 hover:bg-gray-300 disabled:bg-gray-100"
+              onClick={() => increment(motionValue, setMotionValue, 255)}
+              disabled={loading || steps >= 255}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
+            </button>
+            <button
+              className="px-1 border-r border-b rounded-br bg-gray-100 hover:bg-gray-300 disabled:bg-gray-100"
+              onClick={() => decrement(motionValue, setMotionValue, 1)}
+              disabled={loading || motionValue <= 1}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+          </div>
+        </div>
       </div>
       </div>
       
-
+      {/* Cond Aug */}
       <div className="flex flex-col gap-2">
       <div className='flex flex-row justify-between items-center'>
       <label className="font-medium">cond aug</label>
@@ -87,12 +118,13 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           type="range"
           min="0"
           max="10"
-          step=".1"
+          step="0.1"
           value={condAug}
           onChange={handleCondAugChange}
           disabled={loading}
           className="flex-1 accent-purple-500 cursor-pointer"
         />
+        <div className="flex flex-row">
         <input
           type="number"
           min="0"
@@ -100,8 +132,25 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={condAug}
           onChange={handleCondAugChange}
           disabled={loading}
-          className="w-20 px-2 py-1 border rounded focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border rounded-l focus:outline-purple-500 focus:outline"
         />
+        <div className='flex flex-col'>
+            <button
+              className=" px-1 border-r border-t border-b rounded-tr bg-gray-100 hover:bg-gray-300 disabled:bg-gray-100"
+              onClick={() => incrementCond(condAug, setCondAug, 10)}
+              disabled={loading || condAug >= 10}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
+            </button>
+            <button
+              className="px-1 border-r border-b rounded-br bg-gray-100 hover:bg-gray-300 disabled:bg-gray-100"
+              onClick={() => decrementCond(condAug, setCondAug, 0)}
+              disabled={loading || condAug <= 0}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+        </div>
+        </div>
         </div>
       </div>
 
@@ -133,7 +182,6 @@ const MotionControls: React.FC<MotionControlsProps> = ({
             className=" w-12 appearance-none px-2 border rounded-l focus:outline-purple-500 focus:outline "
           />
 
-        
           <div className='flex flex-col'>
             <button
               className=" px-1 border-r border-t border-b rounded-tr bg-gray-100 hover:bg-gray-300 disabled:bg-gray-100"
@@ -149,7 +197,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
             </button>
-            </div>
+          </div>
         </div>
 
 
@@ -172,6 +220,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           disabled={loading}
           className="flex-1 accent-purple-500 cursor-pointer"
         />
+        <div className="flex flex-row ">
         <input
           type="number"
           min="1"
@@ -179,8 +228,25 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={fps}
           onChange={handleFpsChange}
           disabled={loading}
-          className="w-20 px-2 py-1 border rounded focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border rounded-l focus:outline-purple-500 focus:outline"
         />
+        <div className='flex flex-col'>
+            <button
+              className=" px-1 border-r border-t border-b rounded-tr bg-gray-100 hover:bg-gray-300 disabled:bg-gray-100"
+              onClick={() => increment(fps, setFps, 25)}
+              disabled={loading || fps >= 25}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
+            </button>
+            <button
+              className="px-1 border-r border-b rounded-br bg-gray-100 hover:bg-gray-300 disabled:bg-gray-100"
+              onClick={() => decrement(fps, setFps, 1)}
+              disabled={loading || fps <= 1}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+          </div>
+          </div>
         </div>
       </div>
 
