@@ -85,7 +85,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={motionValue}
           onChange={handleChange}
           disabled={loading}
-          className="w-12 px-2 py-1 border rounded-l focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border overflow-hidden rounded-l focus:outline-purple-500 focus:outline"
         />
         <div className='flex flex-col'>
             <button

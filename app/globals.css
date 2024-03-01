@@ -107,9 +107,4 @@ input[type="number"] {
 }
 
 
-input[type="number"] {
-  -webkit-appearance: none; /* For Safari */
-  -moz-appearance: textfield; /* For Firefox */
-  appearance: none; /* Standard syntax */
-}
 
