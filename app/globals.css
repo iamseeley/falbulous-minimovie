@@ -18,6 +18,10 @@
   background-size: 1000px 100%;
 }
 
+.video-placeholder {
+  background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+}
+
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
@@ -78,3 +82,8 @@ input[type='range']:focus::-moz-range-thumb {
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.5); 
 }
 
+
+
+.carousel-slide {
+  transition: transform 0.5s ease-in-out;
+}

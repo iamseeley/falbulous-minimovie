@@ -6,8 +6,6 @@ interface TitleNavigationProps {
     scenes: string[];
     loading: boolean;
     scenesInfo: { [key: string]: { url: string; prompt: string } };
-    moveToNextScene: () => void;
-    moveToPreviousScene: () => void;
 }
 
 const TitleNavigation: React.FC<TitleNavigationProps> = ({
@@ -16,33 +14,34 @@ const TitleNavigation: React.FC<TitleNavigationProps> = ({
     scenes,
     loading,
     scenesInfo,
-    moveToNextScene,
-    moveToPreviousScene,
+   
 }) => {
     // Function to determine if a scene button should be enabled
+    // Determine the index of the last scene with a generated video
+    const hasVideoGenerated = (index: number) => scenesInfo[scenes[index]]?.url !== undefined;
+
+    // Function to determine if a scene button should be enabled
     const isSceneEnabled = (index: number) => {
-        // Enable if it's the current scene or a previously generated one
-        if (index <= currentSceneIndex) return true;
-        // Enable the next scene button only if the current scene is generated
-        if (index === currentSceneIndex + 1 && scenesInfo[scenes[currentSceneIndex]]?.url) return true;
+        if (index === 0) return true; // Always enable the first scene for navigation
+        
+        // Enable if the scene has a generated video
+        if (hasVideoGenerated(index)) return true;
+
+        // Enable the immediate next scene after the last scene with a generated video
+        for (let i = index - 1; i >= 0; i--) {
+            if (hasVideoGenerated(i)) {
+                return index === i + 1;
+            }
+        }
+
         return false;
     };
 
     // Handler for scene selection that uses moveToNextScene and moveToPreviousScene logic
     const handleSceneSelection = (index: number) => {
-        // Calculate direction of navigation
-        const direction = index - currentSceneIndex;
-        // Navigate based on the direction
-        if (direction > 0) {
-            for (let i = 0; i < direction; i++) {
-                moveToNextScene();
-            }
-        } else {
-            for (let i = 0; i < Math.abs(direction); i++) {
-                moveToPreviousScene();
-            }
-        }
+        setCurrentSceneIndex(index);
     };
+    
 
     return (
         <div className='flex overflow-x-auto no-scrollbar'>

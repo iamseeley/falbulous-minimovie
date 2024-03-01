@@ -4,7 +4,7 @@ interface SceneDisplayProps {
   }
   
 const SceneDisplay: React.FC<SceneDisplayProps> = ({ loading, currentVideoUrl }) => (
-<div className="w-full rounded">
+<div className="w-full rounded mt-2">
     {loading ? (
     <div className="shimmer aspect-video rounded"></div>
     ) : currentVideoUrl ? (
@@ -12,10 +12,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({ loading, currentVideoUrl })
         Your browser does not support the video tag.
     </video>
     ) : (
-    <></>
-    // <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
-    //     <p>No video generated for this scene yet. Generate or navigate through the scenes.</p>
-    // </div>
+    <div className="aspect-video video-placeholder flex justify-center items-center text-4xl rounded">🎞️</div>
     )}
 </div>
 );

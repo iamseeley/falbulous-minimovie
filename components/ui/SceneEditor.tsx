@@ -7,6 +7,7 @@ import SceneNavigation from './SceneNavigation';
 import MotionControls from './MotionControls';
 import SceneDisplay from '../SceneDisplay';
 import TitleNavigation from './TitleNavigation';
+import { useState, useEffect } from 'react';
 
 interface SceneEditorProps {
   prompt: string;
@@ -31,6 +32,7 @@ interface SceneEditorProps {
   scenes: string[];
   scenesInfo: {[key: string]: { url: string; prompt: string }};
   setCurrentSceneIndex: (index: number) => void;
+  handleSetCurrentSceneIndex: (index: number) => void;
 }
 
 const SceneEditor: React.FC<SceneEditorProps> = ({
@@ -52,19 +54,19 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
   scenes,
   scenesInfo,
   setCurrentSceneIndex, // Ensure this prop is used for direct navigation by title
+  handleSetCurrentSceneIndex
 }) => {
-  // Assuming `motionValue` is managed within MotionControls or at a higher level to be used here
+
   return (
     <div className="flex flex-col gap-4">
       <h3 className='text-2xl font-semibold'>Scene Editor</h3>
       <TitleNavigation
-        setCurrentSceneIndex={setCurrentSceneIndex}
+        setCurrentSceneIndex={handleSetCurrentSceneIndex}
         currentSceneIndex={currentSceneIndex}
         scenes={scenes}
         loading={loading}
         scenesInfo={scenesInfo}
-        moveToPreviousScene={moveToPreviousScene}
-        moveToNextScene={moveToNextScene}
+
       />
       <p className='font-medium text-sm'>📌 The more descriptive the better!</p>
       <TextInput 
@@ -89,14 +91,14 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
         loading={loading}
         currentVideoUrl={currentVideoUrl}
       />
-      <SceneNavigation
+      {/* <SceneNavigation
         moveToPreviousScene={moveToPreviousScene}
         moveToNextScene={moveToNextScene}
         currentSceneIndex={currentSceneIndex}
         scenes={scenes}
         loading={loading}
         scenesInfo={scenesInfo}
-      />
+      /> */}
     </div>
   );
 };

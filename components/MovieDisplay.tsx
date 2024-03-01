@@ -90,9 +90,7 @@ const MovieDisplay: React.FC<MovieDisplayProps> = ({ scenesInfo }) => {
         )}
         </>
         ) : (
-          <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
-            <p>No movie generated yet. Please generate all the scenes first.</p>
-          </div>
+          <div className="aspect-video video-placeholder flex justify-center items-center text-4xl rounded">🎞️</div>
         )}
     </div>
     <div className='flex justify-center'>

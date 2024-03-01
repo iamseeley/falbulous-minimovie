@@ -71,6 +71,14 @@ export default function Home() {
     }
   };
 
+  const handleSetCurrentSceneIndex = (index: number) => {
+    const scene = scenes[index];
+    const sceneInfo = scenesInfo[scene];
+    setCurrentSceneIndex(index);
+    setPrompt(sceneInfo?.prompt || '');
+    setCurrentVideoUrl(sceneInfo?.url || null);
+  };
+
 // One Model setup - AnimateDiff
 
   // const generateVideo = async () => {
@@ -230,6 +238,7 @@ export default function Home() {
           scenes={scenes}
           scenesInfo={scenesInfo}
           currentVideoUrl={currentVideoUrl}
+          handleSetCurrentSceneIndex={handleSetCurrentSceneIndex}
         />
         </section>
 

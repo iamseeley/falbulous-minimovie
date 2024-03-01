@@ -13,7 +13,7 @@ interface VidGenControlProps {
         className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2 disabled:opacity-60"
         disabled={loading}
       >
-        {loading ? 'Generating...' : 'Generate Video'}
+        {loading ? 'Generating...' : 'Generate Scene'}
         {loading && (
           <svg className="animate-spin -mr-1 ml-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

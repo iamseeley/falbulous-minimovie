@@ -7,8 +7,8 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Falbalous MiniMovie",
-  description: "Generate mini movies from text, scene by scene.",
+  title: "Falbulous MiniMovie",
+  description: "Generate a mini movie from text, scene by scene.",
 };
 
 export default function RootLayout({

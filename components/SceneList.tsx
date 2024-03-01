@@ -28,11 +28,11 @@ const SceneList: React.FC<SceneListProps> = ({ scenes, scenesInfo }) => {
       <h3 className="text-2xl font-semibold mb-4">Scenes</h3>
       <div className="w-full overflow-hidden">
         <div
-          className="flex md:w-1/2 transition-transform duration-300 ease-in-out"
+          className="flex transition-transform duration-300 ease-in-out"
           style={{ transform: `translateX(-${activeIndex * 100}%)` }}
         >
           {scenes.map((scene, index) => (
-            <div className="min-w-full  " key={index}>
+            <div className="min-w-full" key={index}>
               <h4 className="text-lg font-semibold mb-2">{scene}</h4>
               {scenesInfo[scene]?.url ? (
                 <>
@@ -40,9 +40,7 @@ const SceneList: React.FC<SceneListProps> = ({ scenes, scenesInfo }) => {
                   <p className="text-sm text-gray-600">Prompt: {scenesInfo[scene].prompt}</p>
                 </>
               ) : (
-                <div className="bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4" role="alert">
-                  <p>No video generated for this scene yet.</p>
-                </div>
+                <div className="aspect-video video-placeholder flex justify-center items-center text-4xl rounded">🎞️</div>
               )}
             </div>
           ))}
