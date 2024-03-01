@@ -69,6 +69,7 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
 
       />
       <p className='font-medium text-sm'>📌 The more descriptive the better!</p>
+      <div className='flex flex-col md:flex-row md:gap-4'>
       <TextInput 
         value={prompt} 
         onChange={handlePromptChange} 
@@ -83,6 +84,7 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
         seed={seed} setSeed={setSeed}
         loading={loading}
       />
+      </div>
       <VidGenControl
         generateVideo={() => generateVideo()}
         loading={loading}
@@ -91,6 +93,7 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
         loading={loading}
         currentVideoUrl={currentVideoUrl}
       />
+      
       {/* <SceneNavigation
         moveToPreviousScene={moveToPreviousScene}
         moveToNextScene={moveToNextScene}

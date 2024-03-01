@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://falbulous-minimovie.vercel.app/'),
   title: "Falbulous MiniMovie",
   description: "Bring your stories to life, scene by scene, and watch your movie unfold.",
   openGraph: {

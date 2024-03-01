@@ -87,3 +87,22 @@ input[type='range']:focus::-moz-range-thumb {
 .carousel-slide {
   transition: transform 0.5s ease-in-out;
 }
+
+
+/* Standard syntax (works in modern browsers) */
+input[type="number"] {
+  appearance: none;
+}
+
+/* Webkit (for older versions of Chrome, Safari, etc.) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
