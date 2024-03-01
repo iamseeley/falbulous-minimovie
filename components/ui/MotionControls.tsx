@@ -73,7 +73,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
         min="1"
         max="255"
         value={motionValue} // Controlled component with value from props
-        className="accent-purple-500 flex-1 cursor-pointer"
+        className="accent-purple-500 flex-1 cursor-pointer mt-auto"
         onChange={handleChange}
         disabled={loading}
       />
@@ -122,7 +122,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={condAug}
           onChange={handleCondAugChange}
           disabled={loading}
-          className="flex-1 accent-purple-500 cursor-pointer"
+          className="flex-1 accent-purple-500 cursor-pointer mt-auto"
         />
         <div className="flex flex-row rounded">
         <input
@@ -168,7 +168,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={steps}
           onChange={handleStepsChange}
           disabled={loading}
-          className="flex-1 accent-purple-500 cursor-pointer"
+          className="flex-1 accent-purple-500 cursor-pointer mt-auto"
         />
         <div className="flex flex-row rounded">
           <input
@@ -218,7 +218,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={fps}
           onChange={handleFpsChange}
           disabled={loading}
-          className="flex-1 accent-purple-500 cursor-pointer"
+          className="flex-1 accent-purple-500 cursor-pointer mt-auto"
         />
         <div className="flex flex-row rounded">
         <input
