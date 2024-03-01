@@ -77,7 +77,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
         onChange={handleChange}
         disabled={loading}
       />
-     <div className="flex flex-row">
+     <div className="flex flex-row rounded">
      <input
           type="number"
           min="1"
@@ -85,7 +85,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={motionValue}
           onChange={handleChange}
           disabled={loading}
-          className="w-12 px-2 py-1 border overflow-hidden rounded-l focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border   focus:outline-purple-500 focus:outline"
         />
         <div className='flex flex-col'>
             <button
@@ -124,7 +124,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           disabled={loading}
           className="flex-1 accent-purple-500 cursor-pointer"
         />
-        <div className="flex flex-row">
+        <div className="flex flex-row rounded">
         <input
           type="number"
           min="0"
@@ -132,7 +132,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={condAug}
           onChange={handleCondAugChange}
           disabled={loading}
-          className="w-12 px-2 py-1 border rounded-l focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border  focus:outline-purple-500 focus:outline"
         />
         <div className='flex flex-col'>
             <button
@@ -170,7 +170,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           disabled={loading}
           className="flex-1 accent-purple-500 cursor-pointer"
         />
-        <div className="flex flex-row ">
+        <div className="flex flex-row rounded">
           <input
 
             type="number"
@@ -179,7 +179,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
             value={steps}
             onChange={handleStepsChange}
             disabled={loading}
-            className=" w-12 appearance-none px-2 border rounded-l focus:outline-purple-500 focus:outline "
+            className=" w-12 appearance-none px-2 border focus:outline-purple-500 focus:outline "
           />
 
           <div className='flex flex-col'>
@@ -220,7 +220,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           disabled={loading}
           className="flex-1 accent-purple-500 cursor-pointer"
         />
-        <div className="flex flex-row ">
+        <div className="flex flex-row rounded">
         <input
           type="number"
           min="1"
@@ -228,7 +228,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={fps}
           onChange={handleFpsChange}
           disabled={loading}
-          className="w-12 px-2 py-1 border rounded-l focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border focus:outline-purple-500 focus:outline"
         />
         <div className='flex flex-col'>
             <button
