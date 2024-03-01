@@ -8,7 +8,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Falbulous MiniMovie",
-  description: "Generate a mini movie from text, scene by scene.",
+  description: "Bring your stories to life, scene by scene, and watch your movie unfold.",
+  openGraph: {
+    title: "Falbulous MiniMovie",
+    description: "Bring your stories to life, scene by scene, and watch your movie unfold."
+  }
 };
 
 export default function RootLayout({
