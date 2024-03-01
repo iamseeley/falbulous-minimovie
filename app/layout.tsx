@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   description: "Bring your stories to life, scene by scene, and watch your movie unfold.",
   openGraph: {
     title: "Falbulous MiniMovie",
-    description: "Bring your stories to life, scene by scene, and watch your movie unfold."
+    description: "Bring your stories to life, scene by scene, and watch your movie unfold.",
+    url: "https://falbulous-minimovie.vercel.app/",
   }
 };
 
