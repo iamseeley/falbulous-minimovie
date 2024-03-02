@@ -143,7 +143,7 @@ export default function Home() {
     try {
 
       // Step 1: Generate an image from the text
-      const imageResult = await fal.subscribe('fal-ai/fast-sdxl', {
+      const imageResult = await fal.subscribe('fal-ai/fast-lcm-diffusion', {
         input: {
           prompt: prompt,
           image_size: "landscape_16_9",
