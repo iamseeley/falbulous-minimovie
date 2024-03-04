@@ -136,64 +136,70 @@ export default function Home() {
     setLoading(true);
     setError(null);
     const start = Date.now();
-    // const previousSceneIndex = currentSceneIndex - 1;
-    // const previousScenePrompt = scenesInfo[scenes[previousSceneIndex]]?.prompt || '';
-    // const combinedPrompt = `${previousScenePrompt} ${prompt}`.trim();
-
+  
     try {
-
-      // Step 1: Generate an image from the text
+      // Step 1: Generate a description for the image from the prompt using OpenAI
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            { role: 'system', content: "You are a precise Image describer. You help filmmakers create storyboards for short stories. You respond by providing descriptions of single images that collectively tell a story. Your descriptions are precise and descriptive. Collectively they tell the story presented by the filmmaker. You provide between 7 and 10 image suggestions. Providing each on its own line. Each image is self-contained with location, providing all information in a single sentence. Always include location, always show, don't tell, always drive plot. Be quite literal, describe the scene in specifics. Your final scene should imply a dramatic hook or mystery, or the major plot point." },
+            { role: 'user', content: prompt },
+          ],
+        }),
+      });
+      const detailedPrompt = await response.text();
+      // console.log("Raw response text:", detailedPrompt);
+  
+  
+  
+      // Step 2: Generate an image from the description using your image model
       const imageResult = await fal.subscribe('fal-ai/fast-lcm-diffusion', {
         input: {
-          prompt: prompt,
+          prompt: detailedPrompt, // Use the generated description as the prompt
           image_size: "landscape_16_9",
           seed: 1,
         },
         pollInterval: 1000,
         logs: true,
         onQueueUpdate: (update) => {
-               console.log("Queue update", update);
-                setElapsedTime(Date.now() - start);
-             if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
-                    setLogs((update.logs || []).map((log) => log.message));
-                  }
-                }
-      }) as unknown as { images: Array<{url: string; content_type: string;}>; };
-
-
+          setElapsedTime(Date.now() - start);
+          if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
+            setLogs((update.logs || []).map((log) => log.message));
+          }
+        },
+      }) as { images: Array<{ url: string; content_type: string; }> };
+  
       const imageUrl = imageResult.images[0].url;
-
-
-      // Step 2: Convert the generated image to a video
+  
+      // Step 3: Convert the generated image to a video
       const videoResult = await fal.subscribe('fal-ai/fast-svd-lcm', {
         input: {
           image_url: imageUrl,
           video_size: "landscape_16_9",
-          // seed: seed,
           motion_bucket_id: motionBucketId,
           cond_aug: condAug,
-          setps: steps,
+          steps: steps, // Correct the spelling of 'steps'
           fps: fps,
         },
         logs: true,
         pollInterval: 1000,
         onQueueUpdate: (update) => {
-          console.log("Queue update", update);
-           setElapsedTime(Date.now() - start);
-        if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
-               setLogs((update.logs || []).map((log) => log.message));
-             }
-           }
-      }) as unknown as { video: { url: string } };;
-      console.log(motionBucketId)
-
+          setElapsedTime(Date.now() - start);
+          if (update.status === 'IN_PROGRESS' || update.status === 'COMPLETED') {
+            setLogs((update.logs || []).map((log) => log.message));
+          }
+        },
+      }) as { video: { url: string } };
+  
+      // Update state with the generated video URL
       const currentSceneTitle = scenes[currentSceneIndex];
       setScenesInfo(prevScenes => ({
         ...prevScenes,
         [currentSceneTitle]: { url: videoResult.video.url, prompt: prompt }
       }));
       setCurrentVideoUrl(videoResult.video.url);
-      console.log(videoResult.video.url);
     } catch (error) {
       console.error("Error generating video:", error);
       setError(error);
@@ -201,6 +207,7 @@ export default function Home() {
       setLoading(false);
     }
   };
+  
 
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

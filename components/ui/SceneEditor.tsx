@@ -86,7 +86,7 @@ const SceneEditor: React.FC<SceneEditorProps> = ({
       />
       </div>
       <VidGenControl
-        generateVideo={() => generateVideo()}
+        generateVideo={generateVideo}
         loading={loading}
       />
       <SceneDisplay
