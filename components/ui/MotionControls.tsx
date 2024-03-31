@@ -65,7 +65,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
       <div className='flex flex-col gap-2'>
       <div className='flex flex-row justify-between items-center'>
       <label className="font-medium">motion bucket</label>
-      <HoverCard content={<p className='flex flex-col items-start gap-2'>The motion bucket value determines the motion of the generated video. The higher the number, the more motion there will be.<span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>motion bucket</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
+      <HoverCard content={<p className='flex flex-col leading-normal items-start gap-2'>The motion bucket value determines the motion of the generated video. The higher the number, the more motion there will be.<span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>motion bucket</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
       </div>
       <div className='flex flex-row gap-4'>
       <input
@@ -85,7 +85,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
           value={motionValue}
           onChange={handleChange}
           disabled={loading}
-          className="w-12 px-2 py-1 border rounded-l  focus:outline-purple-500 focus:outline"
+          className="w-12 px-2 py-1 border rounded-l   focus:outline-purple-500 focus:outline"
         />
         <div className='flex flex-col'>
             <button
@@ -111,7 +111,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
       <div className="flex flex-col gap-2">
       <div className='flex flex-row justify-between items-center'>
       <label className="font-medium">cond aug</label>
-      <HoverCard content={<p className='flex flex-col items-start gap-2'>Increasing the conditioning augmentation value leads to more varied and potentially unexpected results.<span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>cond aug</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
+      <HoverCard content={<p className='flex flex-col leading-normal items-start gap-2'>Increasing the conditioning augmentation value leads to more varied and potentially unexpected results.<span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>cond aug</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
       </div>
         <div className='flex flex-row gap-4'>
         <input
@@ -158,7 +158,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
       <div className="flex flex-col gap-2">
       <div className='flex flex-row justify-between items-center'>
       <label className="font-medium">steps</label>
-      <HoverCard content={<p className='flex flex-col items-start gap-2'>The higher the value, the better the quality of the video, and the longer it will take to generate.<span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>steps</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
+      <HoverCard content={<p className='flex flex-col leading-normal items-start gap-2'>The higher the value, the better the quality of the video, and the longer it will take to generate.<span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>steps</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
       </div>
         <div className='flex flex-row gap-4'>
         <input
@@ -208,7 +208,7 @@ const MotionControls: React.FC<MotionControlsProps> = ({
       <div className="flex flex-col gap-2">
       <div className='flex flex-row justify-between items-center'>
       <label className="font-medium">frames per second</label>
-      <HoverCard content={<p className='flex flex-col items-start gap-2'>The higher the value, the faster the video will play. <span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>fps</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
+      <HoverCard content={<p className='flex flex-col leading-normal items-start gap-2'>The higher the value, the faster the video will play. <span className='text-xs text-purple-500 border font-medium px-2 border-purple-500 rounded-full'>fps</span></p>} trigger={<button className='text-xs font-medium border rounded-full px-2 py-0 hover:bg-gray-100'>info</button>} />
       </div>
         <div className='flex flex-row gap-4'>
         <input

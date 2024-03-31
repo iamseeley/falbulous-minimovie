@@ -106,7 +106,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-
+/* 
 input[type="number"] {
-  border-radius: 20px 0 0 4px; /* Adjust as needed */
-}
+  border-radius: 20px 0 0 4px; 
+} */

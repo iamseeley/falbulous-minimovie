@@ -9,6 +9,7 @@ interface SceneNavigationProps {
     scenesInfo: {[key: string]: { url: string; prompt: string }};
   }
   
+  
   const SceneNavigation: React.FC<SceneNavigationProps> = ({
     moveToPreviousScene,
     moveToNextScene,
@@ -17,6 +18,7 @@ interface SceneNavigationProps {
     loading,
     scenesInfo,
   }) => (
+    
     <div className="flex flex-wrap justify-center gap-2">
       {currentSceneIndex > 0 && (
         <button
