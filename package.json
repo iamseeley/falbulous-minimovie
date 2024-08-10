@@ -19,11 +19,11 @@
     "ai": "^3.0.2",
     "axios": "^1.6.7",
     "fluent-ffmpeg": "^2.1.2",
-    "next": "14.1.0",
+    "next": "^14.2.5",
     "node-fetch": "^3.3.2",
     "openai": "^4.28.4",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/fluent-ffmpeg": "^2.1.24",

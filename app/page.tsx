@@ -155,7 +155,7 @@ export default function Home() {
   
   
       // Step 2: Generate an image from the description using your image model
-      const imageResult = await fal.subscribe('fal-ai/fast-lcm-diffusion', {
+      const imageResult = await fal.subscribe('fal-ai/flux/dev', {
         input: {
           prompt: detailedPrompt, // Use the generated description as the prompt
           image_size: "landscape_16_9",
