@@ -31,7 +31,7 @@ export default function RootLayout({
             {children}
           </main>
         <Footer />
-        <Script src="https://esm.town/v/iamseeley/trackingScript" />
+        <Script src="https://esm.town/v/iamseeley/trackingScript" strategy="afterInteractive" />
       </body>
     </html>
   );
